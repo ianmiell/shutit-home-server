@@ -1,4 +1,3 @@
-# We assume the user imiell is set up
 SEND whoami
 ASSERT_OUTPUT root
 
