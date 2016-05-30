@@ -1,0 +1,1 @@
+shutit skeleton --shutitfile Shutitfile

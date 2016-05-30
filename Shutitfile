@@ -1,0 +1,35 @@
+# We assume the user imiell is set up
+SEND whoami
+ASSERT_OUTPUT root
+
+# We assume the user imiell is set up
+SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
+ASSERT_OUTPUT 1
+
+INSTALL docker.io
+INSTALL openssh-server
+INSTALL run-one
+INSTALL apache2
+INSTALL vim
+INSTALL python-pip
+INSTALL meld
+INSTALL tmux
+INSTALL docker-compose
+INSTALL openjdk-8-jre
+INSTALL alien
+INSTALL brasero
+INSTALL virtualbox
+INSTALL vagrant
+
+RUN pip install shutit
+RUN usermod -G docker -a imiell 
+
+RUN mkdir -p /media/storage_{1,2}
+
+RUN docker pull imiell/docker-dev-tools-image
+
+LOGIN imiell
+RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
+RUN cd .dotfiles
+RUN ./script/bootstrap
+LOGOUT
