@@ -29,7 +29,12 @@ RUN mkdir -p /media/storage_{1,2}
 RUN docker pull imiell/docker-dev-tools-image
 
 LOGIN imiell
-RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
-RUN cd .dotfiles
-RUN ./script/bootstrap
+IF NOT FILE_EXISTS /home/imiell/.dotfiles
+	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
+	RUN cd .dotfiles
+	RUN ./script/bootstrap
+ENDIF
 LOGOUT
+
+#TODO: if the config file doesn't exist (configs/build.cnf), handle it appropriately
+#- assume we are building everything in the home dir
