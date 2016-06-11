@@ -1,4 +1,4 @@
-# We assume the user imiell is set up
+# We assume the root user has a password 
 SEND whoami
 ASSERT_OUTPUT root
 
@@ -36,5 +36,6 @@ IF NOT FILE_EXISTS /home/imiell/.dotfiles
 ENDIF
 LOGOUT
 
-#TODO: if the config file doesn't exist (configs/build.cnf), handle it appropriately
-#- assume we are building everything in the home dir
+RUN ssh-keygen
+EXPECT_MULTI ['file in which':'','empty for no passphrase':'','Enter same passphrase again':'']
+
