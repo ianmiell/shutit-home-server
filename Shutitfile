@@ -42,6 +42,7 @@ EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase
 LOGIN imiell
 # If it's not been done before, check out my dotfiles and set it up
 IF_NOT FILE_EXISTS /home/imiell/.dotfiles
+	RUN cd /home/imiell
 	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
 	RUN cd .dotfiles
 	RUN ./script/bootstrap
