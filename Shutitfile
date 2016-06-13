@@ -33,6 +33,9 @@ RUN docker pull imiell/docker-dev-tools-image
 # Set up local storage
 RUN mkdir -p /media/storage_{1,2}
 
+# Create space folder and chown it to imiell
+RUN mkdir -p /space && chown imiell: /space
+
 # Generate an ssh key
 RUN ssh-keygen
 # Note that the response to 'already exists' below prevents overwrite here.
@@ -46,6 +49,7 @@ IF_NOT FILE_EXISTS /home/imiell/.dotfiles
 	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
 	RUN cd .dotfiles
 	RUN ./script/bootstrap
+	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite=O']
 ENDIF
 LOGOUT
 
