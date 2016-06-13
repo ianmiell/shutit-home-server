@@ -1,6 +1,4 @@
 #!/bin/bash
-set -x
-set -e
 rm -rf /tmp/home_server
 shutit skeleton --shutitfile Shutitfile \
 	--module_directory /tmp/home_server \
