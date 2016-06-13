@@ -35,7 +35,8 @@ RUN mkdir -p /media/storage_{1,2}
 
 # Generate an ssh key
 RUN ssh-keygen
-EXPECT_MULTI ['file in which':'','empty for no passphrase':'','Enter same passphrase again':'']
+# Note that the response to 'already exists' below prevents overwrite here.
+EXPECT_MULTI ['file in which':'','empty for no passphrase':'','Enter same passphrase again':'','already exists':'n']
 
 # Log me in as imiell
 LOGIN imiell
