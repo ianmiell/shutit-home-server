@@ -1,11 +1,12 @@
-# We assume the root user has a password 
+# We assert here that we are running as root
 SEND whoami
 ASSERT_OUTPUT root
 
-# We assume the user imiell is set up
+# We assert here the user imiell was set up by the OS installation process
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
 
+# Install required packages
 INSTALL docker.io
 INSTALL openssh-server
 INSTALL run-one
@@ -21,14 +22,24 @@ INSTALL brasero
 INSTALL virtualbox
 INSTALL vagrant
 
+# Install ShutIt, naturally
 RUN pip install shutit
+# Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
 
-RUN mkdir -p /media/storage_{1,2}
-
+# Pull my dev tools image from Dockerhub
 RUN docker pull imiell/docker-dev-tools-image
 
+# Set up local storage
+RUN mkdir -p /media/storage_{1,2}
+
+# Generate an ssh key
+RUN ssh-keygen
+EXPECT_MULTI ['file in which':'','empty for no passphrase':'','Enter same passphrase again':'']
+
+# Log me in as imiell
 LOGIN imiell
+# If it's not been done before, check out my dotfiles and set it up
 IF NOT FILE_EXISTS /home/imiell/.dotfiles
 	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
 	RUN cd .dotfiles
@@ -36,6 +47,4 @@ IF NOT FILE_EXISTS /home/imiell/.dotfiles
 ENDIF
 LOGOUT
 
-RUN ssh-keygen
-EXPECT_MULTI ['file in which':'','empty for no passphrase':'','Enter same passphrase again':'']
 
