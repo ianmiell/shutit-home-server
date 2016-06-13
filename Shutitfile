@@ -39,7 +39,7 @@ RUN ssh-keygen
 EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
 
 # Log me in as imiell
-LOGIN imiell
+USER imiell
 # If it's not been done before, check out my dotfiles and set it up
 IF_NOT FILE_EXISTS /home/imiell/.dotfiles
 	RUN cd /home/imiell
