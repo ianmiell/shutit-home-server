@@ -36,12 +36,12 @@ RUN mkdir -p /media/storage_{1,2}
 # Generate an ssh key
 RUN ssh-keygen
 # Note that the response to 'already exists' below prevents overwrite here.
-EXPECT_MULTI ['file in which':'','empty for no passphrase':'','Enter same passphrase again':'','already exists':'n']
+EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
 
 # Log me in as imiell
 LOGIN imiell
 # If it's not been done before, check out my dotfiles and set it up
-IF NOT FILE_EXISTS /home/imiell/.dotfiles
+IF_NOT FILE_EXISTS /home/imiell/.dotfiles
 	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
 	RUN cd .dotfiles
 	RUN ./script/bootstrap
