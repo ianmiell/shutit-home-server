@@ -41,6 +41,17 @@ RUN ssh-keygen
 # Note that the response to 'already exists' below prevents overwrite here.
 EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
 
+# Apache
+RUN a2enmod proxy
+RUN a2enmod proxy_http
+RUN a2enmod proxy_ajp
+RUN a2enmod rewrite
+RUN a2enmod deflate
+RUN a2enmod headers
+RUN a2enmod proxy_balancer
+RUN a2enmod proxy_connect
+RUN a2enmod proxy_html
+
 # Log me in as imiell
 USER imiell
 # If it's not been done before, check out my dotfiles and set it up
@@ -52,5 +63,4 @@ IF_NOT FILE_EXISTS /home/imiell/.dotfiles
 	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite=O']
 ENDIF
 LOGOUT
-
 
