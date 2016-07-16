@@ -22,6 +22,8 @@ INSTALL brasero
 INSTALL virtualbox
 INSTALL vagrant
 INSTALL moreutils
+INSTALL git
+INSTALL git-extras
 
 # Install ShutIt, naturally
 RUN pip install shutit
