@@ -24,6 +24,10 @@ INSTALL vagrant
 INSTALL moreutils
 INSTALL git
 INSTALL git-extras
+INSTALL npm
+INSTALL nodejs-legacy
+INSTALL asciidoc
+RUN npm install -g mermaid
 
 # Install ShutIt, naturally
 RUN pip install shutit
@@ -38,6 +42,11 @@ RUN mkdir -p /media/storage_{1,2}
 
 # Create space folder and chown it to imiell
 RUN mkdir -p /space && chown imiell: /space
+
+# Asciidoc
+# asciidoctor pdf
+RUN gem install --pre asciidoctor-pdf
+RUN gem install coderay pygments.rb
 
 # Generate an ssh key
 RUN ssh-keygen
