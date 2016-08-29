@@ -27,6 +27,7 @@ INSTALL git-extras
 INSTALL npm
 INSTALL nodejs-legacy
 INSTALL asciidoc
+INSTALL awscli
 RUN npm install -g mermaid
 
 # Install ShutIt, naturally
