@@ -28,6 +28,7 @@ INSTALL npm
 INSTALL nodejs-legacy
 INSTALL asciidoc
 INSTALL awscli
+INSTALL python3-pip
 RUN npm install -g mermaid
 
 # Install ShutIt, naturally
