@@ -20,7 +20,6 @@ INSTALL openjdk-8-jre
 INSTALL alien
 INSTALL brasero
 INSTALL virtualbox
-INSTALL vagrant
 INSTALL moreutils
 INSTALL git
 INSTALL git-extras
@@ -44,6 +43,7 @@ RUN mkdir -p /media/storage_{1,2}
 
 # Create space folder and chown it to imiell
 RUN mkdir -p /space && chown imiell: /space
+RUN mkdir -p /space/git
 
 # Asciidoc
 # asciidoctor pdf
@@ -66,6 +66,11 @@ RUN a2enmod proxy_balancer
 RUN a2enmod proxy_connect
 RUN a2enmod proxy_html
 
+# Vagrant 1.8.6 required
+RUN wget https://releases.hashicorp.com/vagrant/1.8.6/vagrant_1.8.6_x86_64.deb
+RUN dpkg -i vagrant_1.8.6_x86_64.deb
+RUN rm vagrant_1.8.6_x86_64.deb
+
 # Log me in as imiell
 USER imiell
 # If it's not been done before, check out my dotfiles and set it up
@@ -76,5 +81,10 @@ IF_NOT FILE_EXISTS /home/imiell/.dotfiles
 	RUN ./script/bootstrap
 	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite=O']
 ENDIF
+
+# Git repos
+RUN cd /space/git
+RUN wget -qO- https://api.github.com/users/ianmiell/repos | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+
 LOGOUT
 
