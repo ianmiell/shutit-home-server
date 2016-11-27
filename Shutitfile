@@ -29,6 +29,7 @@ INSTALL asciidoc
 INSTALL awscli
 INSTALL python3-pip
 RUN npm install -g mermaid
+RUN pip install --upgrade pip
 
 # Install ShutIt, naturally
 RUN pip install shutit
