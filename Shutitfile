@@ -34,6 +34,7 @@ RUN pip install --upgrade pip
 
 # Install ShutIt, naturally
 RUN pip install shutit
+RUN pip install requests
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
 
@@ -73,6 +74,12 @@ RUN wget https://releases.hashicorp.com/vagrant/1.8.6/vagrant_1.8.6_x86_64.deb
 RUN dpkg -i vagrant_1.8.6_x86_64.deb
 RUN rm vagrant_1.8.6_x86_64.deb
 
+# Email backup - TODO: cron - https://github.com/gaubert/gmvault
+RUN mkdir -p /space/email_backup
+RUN cd /space/email_backup
+RUN pip install gmvault
+RUN chown -R imiell:imiell /space/email_backup
+
 # Log me in as imiell
 USER imiell
 # If it's not been done before, check out my dotfiles and set it up
@@ -86,6 +93,7 @@ ENDIF
 
 # Git repos
 RUN cd /space/git
+# All mine
 RUN wget -qO- https://api.github.com/users/ianmiell/repos?per_page=1000 | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
 
 #https://ubuntuforums.org/showthread.php?t=1842371 - speed up login
