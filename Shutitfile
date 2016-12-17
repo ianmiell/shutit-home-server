@@ -7,7 +7,6 @@ SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
 
 # Install required packages
-INSTALL docker.io
 INSTALL openssh-server
 INSTALL run-one
 INSTALL apache2
@@ -35,6 +34,9 @@ RUN pip install --upgrade pip
 # Install ShutIt, naturally
 RUN pip install shutit
 RUN pip install requests
+
+# Install docker
+RUN curl -sSL https://get.docker.com/ | sh
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
 
