@@ -28,6 +28,7 @@ INSTALL nodejs-legacy
 INSTALL asciidoc
 INSTALL awscli
 INSTALL python3-pip
+INSTALL jq
 RUN npm install -g mermaid
 RUN pip install --upgrade pip
 
@@ -89,6 +90,9 @@ RUN wget -qO- https://api.github.com/users/ianmiell/repos?per_page=1000 | grep f
 
 #https://ubuntuforums.org/showthread.php?t=1842371 - speed up login
 RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
+
+# jid jq explorer
+RUN go get -u github.com/simeji/jid/cmd/jid
 
 LOGOUT
 
