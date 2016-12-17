@@ -39,7 +39,7 @@ RUN pip install requests
 RUN usermod -G docker -a imiell 
 
 # Pull my dev tools image from Dockerhub
-RUN docker pull imiell/docker-dev-tools-image
+#RUN docker pull imiell/docker-dev-tools-image
 
 # Set up local storage
 RUN mkdir -p /media/storage_{1,2}
