@@ -2,6 +2,9 @@
 SEND whoami
 ASSERT_OUTPUT root
 
+SEND lsb_release -d -s | awk '{print $1}'
+ASSERT_OUTPUT Ubuntu
+
 # We assert here the user imiell was set up by the OS installation process
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
@@ -28,6 +31,9 @@ INSTALL asciidoc
 INSTALL awscli
 INSTALL python3-pip
 INSTALL jq
+INSTALL fslint
+INSTALL apt-file
+RUN apt-file update
 RUN npm install -g mermaid
 RUN pip install --upgrade pip
 
