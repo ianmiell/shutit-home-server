@@ -33,6 +33,7 @@ INSTALL jq
 INSTALL fslint
 INSTALL pylint
 INSTALL apt-file
+INSTALL shellcheck
 RUN apt-file update
 RUN npm install -g mermaid
 RUN pip install --upgrade pip
