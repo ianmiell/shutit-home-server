@@ -17,7 +17,6 @@ INSTALL vim
 INSTALL python-pip
 INSTALL meld
 INSTALL tmux
-INSTALL docker-compose
 INSTALL openjdk-8-jre
 INSTALL alien
 INSTALL brasero
@@ -42,12 +41,12 @@ RUN pip install shutit
 RUN pip install requests
 
 # Install docker
-RUN curl -sSL https://get.docker.com/ | sh
+IF_NOT RUN docker version
+	RUN curl -sSL https://get.docker.com/ | sh
+ENDIF
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
 
-# Pull my dev tools image from Dockerhub
-#RUN docker pull imiell/docker-dev-tools-image
 
 # Set up local storage
 RUN mkdir -p /media/storage_{1,2}
@@ -78,15 +77,20 @@ RUN a2enmod proxy_connect
 RUN a2enmod proxy_html
 
 # Vagrant 1.8.6 required
-RUN wget https://releases.hashicorp.com/vagrant/1.8.6/vagrant_1.8.6_x86_64.deb
-RUN dpkg -i vagrant_1.8.6_x86_64.deb
-RUN rm vagrant_1.8.6_x86_64.deb
+IF_NOT RUN vagrant version
+	RUN wget https://releases.hashicorp.com/vagrant/1.8.6/vagrant_1.8.6_x86_64.deb
+	RUN dpkg -i vagrant_1.8.6_x86_64.deb
+	RUN rm vagrant_1.8.6_x86_64.deb
+ENDIF
 
 # Email backup - TODO: cron - https://github.com/gaubert/gmvault
 RUN mkdir -p /space/email_backup
 RUN cd /space/email_backup
 RUN pip install gmvault
 RUN chown -R imiell:imiell /space/email_backup
+
+#https://ubuntuforums.org/showthread.php?t=1842371 - speed up login
+RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 
 # Log me in as imiell
 USER imiell
@@ -101,14 +105,20 @@ ENDIF
 
 # Git repos
 RUN cd /space/git
-# All mine
-RUN wget -qO- https://api.github.com/users/ianmiell/repos?per_page=1000 | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
-
-#https://ubuntuforums.org/showthread.php?t=1842371 - speed up login
-RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 
 # jid jq explorer
-RUN go get -u github.com/simeji/jid/cmd/jid
+# TODO install go
+#RUN go get -u github.com/simeji/jid/cmd/jid
+
+
+# All mine - takes too long!
+RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=1' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=2' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=3' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+
+LOGOUT
+# Pull my dev tools image from Dockerhub
+RUN docker pull imiell/docker-dev-tools-image
 
 LOGOUT
 
