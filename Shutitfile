@@ -62,6 +62,9 @@ RUN mkdir -p /space/git
 RUN gem install --pre asciidoctor-pdf
 RUN gem install coderay pygments.rb
 
+# Install Vundle, vim manager
+RUN git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
 # Generate an ssh key
 RUN ssh-keygen
 # Note that the response to 'already exists' below prevents overwrite here.
