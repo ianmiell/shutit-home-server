@@ -39,6 +39,7 @@ RUN pip install --upgrade pip
 # Install ShutIt, naturally
 RUN pip install shutit
 RUN pip install requests
+RUN pip install coverage
 
 # Install docker
 IF_NOT RUN docker version
