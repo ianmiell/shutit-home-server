@@ -31,6 +31,7 @@ INSTALL awscli
 INSTALL python3-pip
 INSTALL jq
 INSTALL fslint
+INSTALL pylint
 INSTALL apt-file
 RUN apt-file update
 RUN npm install -g mermaid
