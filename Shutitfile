@@ -60,7 +60,7 @@ RUN mkdir -p /space/git
 # Asciidoc
 # asciidoctor pdf
 RUN gem install --pre asciidoctor-pdf
-RUN gem install coderay pygments.rb
+RUN gem install coderay pygments.rb tilt slim
 
 # Install Vundle, vim manager
 RUN git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -114,6 +114,10 @@ RUN cd /space/git
 # jid jq explorer
 # TODO install go
 #RUN go get -u github.com/simeji/jid/cmd/jid
+
+# Asciidoc for user imiell also?
+RUN gem install --pre asciidoctor-pdf
+RUN gem install coderay pygments.rb tilt slim
 
 
 ## All mine - takes too long!
