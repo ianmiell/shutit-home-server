@@ -116,14 +116,15 @@ RUN cd /space/git
 #RUN go get -u github.com/simeji/jid/cmd/jid
 
 
-# All mine - takes too long!
-RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=1' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
-RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=2' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
-RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=3' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+## All mine - takes too long!
+#RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=1' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+#RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=2' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+#RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=3' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
+
+# tmux plugin manager
+RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 LOGOUT
 # Pull my dev tools image from Dockerhub
 RUN docker pull imiell/docker-dev-tools-image
-
-LOGOUT
 
