@@ -47,7 +47,14 @@ RUN pip install coverage
 
 # Install docker
 IF_NOT RUN docker version
-	RUN curl -sSL https://get.docker.com/ | sh
+	INSTALL apt-transport-https
+	INSTALL ca-certificates
+	INSTALL curl
+	INSTALL software-properties-common
+	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+	RUN apt-get update
+	RUN apt install docker-ce
 ENDIF
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
