@@ -36,6 +36,8 @@ INSTALL apt-file
 INSTALL shellcheck
 INSTALL sqlite3
 INSTALL golang-go
+INSTALL vagrant
+INSTALL gnuplot
 RUN apt-file update
 RUN npm install -g mermaid
 RUN pip install --upgrade pip
