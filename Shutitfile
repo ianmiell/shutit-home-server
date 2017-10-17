@@ -48,16 +48,16 @@ RUN pip install requests
 RUN pip install coverage
 
 # Install docker
-IF_NOT RUN docker version
-	INSTALL apt-transport-https
-	INSTALL ca-certificates
-	INSTALL curl
-	INSTALL software-properties-common
-	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-	RUN apt-get update
-	RUN apt install docker-ce
-ENDIF
+#IF_NOT RUN docker version
+#	INSTALL apt-transport-https
+#	INSTALL ca-certificates
+#	INSTALL curl
+#	INSTALL software-properties-common
+#	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+#	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+#	RUN apt-get update
+#	RUN apt install docker-ce
+#ENDIF
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
 
@@ -74,13 +74,12 @@ RUN mkdir -p /space/git
 RUN gem install --pre asciidoctor-pdf
 RUN gem install coderay pygments.rb tilt slim
 
-# Install Vundle, vim manager
-RUN git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-
 # Generate an ssh key
-RUN ssh-keygen
-# Note that the response to 'already exists' below prevents overwrite here.
-EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
+IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
+	RUN ssh-keygen
+	# Note that the response to 'already exists' below prevents overwrite here.
+	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
+ENDIF
 
 # Apache
 RUN a2enmod proxy
@@ -128,8 +127,8 @@ RUN cd /space/git
 #RUN go get -u github.com/simeji/jid/cmd/jid
 
 # Asciidoc for user imiell also?
-RUN gem install --pre asciidoctor-pdf
-RUN gem install coderay pygments.rb tilt slim
+#RUN gem install --pre asciidoctor-pdf
+#RUN gem install coderay pygments.rb tilt slim
 
 
 ## All mine - takes too long!
