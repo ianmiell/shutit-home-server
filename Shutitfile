@@ -105,6 +105,11 @@ RUN cd /space/email_backup
 RUN pip install gmvault
 RUN chown -R imiell:imiell /space/email_backup
 
+# Jenkins
+RUN mkdir -p /var/jenkins
+RUN chown imiell: /var/jenkins
+
+
 #https://ubuntuforums.org/showthread.php?t=1842371 - speed up login
 RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 
