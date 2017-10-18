@@ -40,6 +40,7 @@ INSTALL vagrant
 INSTALL gnuplot
 RUN apt-file update
 RUN npm install -g mermaid
+RUN npm install -g gtop
 RUN pip install --upgrade pip
 
 # Install ShutIt, naturally
@@ -112,6 +113,15 @@ RUN chown imiell: /var/jenkins
 
 #https://ubuntuforums.org/showthread.php?t=1842371 - speed up login
 RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
+
+
+IF_NOT RUN chef
+	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
+	RUN apt-get install chefdk_2.3.4-1_amd64.deb
+	RUN gem install rake
+	RUN gem install rubocop
+	RUN gem install cookstyle
+ENDIF
 
 # Log me in as imiell
 USER imiell
