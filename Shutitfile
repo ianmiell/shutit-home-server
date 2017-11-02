@@ -49,16 +49,16 @@ RUN pip install requests
 RUN pip install coverage
 
 # Install docker
-#IF_NOT RUN docker version
-#	INSTALL apt-transport-https
-#	INSTALL ca-certificates
-#	INSTALL curl
-#	INSTALL software-properties-common
-#	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-#	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-#	RUN apt-get update
-#	RUN apt install docker-ce
-#ENDIF
+IF_NOT RUN docker version
+	INSTALL apt-transport-https
+	INSTALL ca-certificates
+	INSTALL curl
+	INSTALL software-properties-common
+	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+	RUN apt-get update
+	RUN apt install docker-ce
+ENDIF
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
 
@@ -115,13 +115,13 @@ RUN chown imiell: /var/jenkins
 RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 
 
-IF_NOT RUN chef
-	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
-	RUN apt-get install chefdk_2.3.4-1_amd64.deb
-	RUN gem install rake
-	RUN gem install rubocop
-	RUN gem install cookstyle
-ENDIF
+#IF_NOT RUN chef
+#	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
+#	RUN apt-get install chefdk_2.3.4-1_amd64.deb
+#	RUN gem install rake
+#	RUN gem install rubocop
+#	RUN gem install cookstyle
+#ENDIF
 
 # Log me in as imiell
 USER imiell
