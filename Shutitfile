@@ -39,10 +39,13 @@ INSTALL golang-go
 INSTALL vagrant
 INSTALL gnuplot
 INSTALL ubuntu-desktop
+INSTALL virtualbox-guest-dkms
 RUN apt-file update
 RUN npm install -g mermaid
-RUN npm install -g gtop
-RUN pip install --upgrade pip
+IF_NOT RUN which gtop
+	RUN npm install -g gtop
+	RUN pip install --upgrade pip
+ENDIF
 
 # Install ShutIt, naturally
 RUN pip install shutit
