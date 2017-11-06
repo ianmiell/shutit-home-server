@@ -38,6 +38,7 @@ INSTALL sqlite3
 INSTALL golang-go
 INSTALL vagrant
 INSTALL gnuplot
+INSTALL ubuntu-desktop
 RUN apt-file update
 RUN npm install -g mermaid
 RUN npm install -g gtop
