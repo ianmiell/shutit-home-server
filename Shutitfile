@@ -57,7 +57,7 @@ IF_NOT RUN docker version
 	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 	RUN apt-get update
-	RUN apt install docker-ce
+	RUN apt install -y docker-ce
 ENDIF
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell 
