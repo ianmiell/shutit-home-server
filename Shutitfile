@@ -94,17 +94,11 @@ RUN a2enmod proxy_connect
 RUN a2enmod proxy_html
 
 # Vagrant 1.8.6 required
-IF_NOT RUN vagrant version
-	RUN wget https://releases.hashicorp.com/vagrant/1.8.6/vagrant_1.8.6_x86_64.deb
-	RUN dpkg -i vagrant_1.8.6_x86_64.deb
-	RUN rm vagrant_1.8.6_x86_64.deb
-ENDIF
-
-# Email backup - TODO: cron - https://github.com/gaubert/gmvault
-RUN mkdir -p /space/email_backup
-RUN cd /space/email_backup
-RUN pip install gmvault
-RUN chown -R imiell:imiell /space/email_backup
+#IF_NOT RUN vagrant version
+#	RUN wget https://releases.hashicorp.com/vagrant/1.8.6/vagrant_1.8.6_x86_64.deb
+#	RUN dpkg -i vagrant_1.8.6_x86_64.deb
+#	RUN rm vagrant_1.8.6_x86_64.deb
+#ENDIF
 
 # Jenkins
 RUN mkdir -p /var/jenkins
