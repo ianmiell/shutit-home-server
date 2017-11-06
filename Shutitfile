@@ -150,5 +150,5 @@ RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 LOGOUT
 # Pull my dev tools image from Dockerhub
-RUN docker pull imiell/docker-dev-tools-image
+#RUN docker pull imiell/docker-dev-tools-image
 
