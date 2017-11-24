@@ -40,6 +40,7 @@ INSTALL vagrant
 INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
+INSTALL groovy
 RUN apt-file update
 RUN npm install -g mermaid
 IF_NOT RUN which gtop
