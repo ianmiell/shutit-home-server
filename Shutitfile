@@ -6,8 +6,6 @@ ASSERT_OUTPUT root
 SEND lsb_release -d -s | awk '{print $1}'
 ASSERT_OUTPUT Ubuntu
 
-# Set logging
-LOG DEBUG
 
 # We assert here the user imiell was set up by the OS installation process
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
@@ -44,10 +42,12 @@ INSTALL vagrant
 INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
-INSTALL groovy # For Jenkins
-INSTALL iptstate   # IPTables state viewer
-INSTALL fail2ban # fail2ban - ban IPs of failing ssh queries
-INSTALL inspec # for inspec tests
+# For Jenkins
+INSTALL groovy
+# IPTables state viewer
+INSTALL iptstate
+# fail2ban - ban IPs of failing ssh queries
+INSTALL fail2ban
 RUN apt-file update
 IF_NOT RUN npm -g ll mermaid
 	RUN npm install -g mermaid
@@ -84,8 +84,11 @@ RUN mkdir -p /media/storage_{1,2}
 RUN mkdir -p /space && chown imiell: /space
 RUN mkdir -p /space/git
 
+# for inspec tests
+IF_NOT RUN inspec version
+	RUN gem install inspec
+ENDIF
 # Asciidoc
-# asciidoctor pdf
 RUN gem install --pre asciidoctor-pdf
 RUN gem install coderay pygments.rb tilt slim
 
@@ -145,8 +148,6 @@ ENDIF
 # Git repos
 RUN cd /space/git
 
-RUN inspec exec controls
-
 # jid jq explorer
 # TODO install go
 #RUN go get -u github.com/simeji/jid/cmd/jid
@@ -168,8 +169,10 @@ ENDIF
 
 LOGOUT
 
+# Set logging for inspec
+LOG DEBUG
 # INSPECS
-inspec supermarket --log-level=debug exec dev-sec/linux-baseline
+RUN inspec supermarket --log-level=debug exec dev-sec/linux-baseline
 # * CIS Distribution Independent Linux Benchmark dev-sec/cis-linux-benchmark
 # * CIS Docker Benchmark dev-sec/cis-docker-benchmark
 # * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
