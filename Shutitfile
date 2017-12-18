@@ -2,8 +2,12 @@
 SEND whoami
 ASSERT_OUTPUT root
 
+# Check this is Ubuntu
 SEND lsb_release -d -s | awk '{print $1}'
 ASSERT_OUTPUT Ubuntu
+
+# Set logging
+LOG DEBUG
 
 # We assert here the user imiell was set up by the OS installation process
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
