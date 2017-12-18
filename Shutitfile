@@ -172,7 +172,7 @@ LOGOUT
 # Set logging for inspec
 LOG DEBUG
 # INSPECS
-RUN inspec supermarket --log-level=debug exec dev-sec/linux-baseline
+RUN inspec supermarket --log-level=debug exec dev-sec/linux-baseline | tee /tmp/inspec_linux_baseline.log
 # * CIS Distribution Independent Linux Benchmark dev-sec/cis-linux-benchmark
 # * CIS Docker Benchmark dev-sec/cis-docker-benchmark
 # * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
