@@ -49,6 +49,7 @@ INSTALL iptstate
 # fail2ban - ban IPs of failing ssh queries
 INSTALL fail2ban
 RUN apt-file update
+RUN apt-get autoremove
 IF_NOT RUN npm -g ll mermaid
 	RUN npm install -g mermaid
 ENDIF
