@@ -48,11 +48,13 @@ INSTALL groovy
 INSTALL iptstate   # IPTables state viewer
 INSTALL fail2ban # fail2ban - ban IPs of failing ssh queries
 RUN apt-file update
-RUN npm install -g mermaid
+IF_NOT RUN npm -g ll mermaid
+	RUN npm install -g mermaid
+ENDIF
 IF_NOT RUN which gtop
 	RUN npm install -g gtop
-	RUN pip install --upgrade pip
 ENDIF
+RUN pip install --upgrade pip
 
 # Install ShutIt, naturally
 RUN pip install shutit
@@ -157,7 +159,9 @@ RUN cd /space/git
 #RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=3' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
 
 # tmux plugin manager
-RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+IF_NOT FILE_EXISTS /home/imiell/.tmux/plugins/tpm
+	RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+ENDIF
 
 LOGOUT
 # Pull my dev tools image from Dockerhub
