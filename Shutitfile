@@ -42,6 +42,7 @@ INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL groovy
 INSTALL iptstate   # IPTables state viewer
+INSTALL fail2ban # fail2ban - ban IPs of failing ssh queries
 RUN apt-file update
 RUN npm install -g mermaid
 IF_NOT RUN which gtop
