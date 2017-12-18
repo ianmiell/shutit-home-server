@@ -44,9 +44,10 @@ INSTALL vagrant
 INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
-INSTALL groovy
+INSTALL groovy # For Jenkins
 INSTALL iptstate   # IPTables state viewer
 INSTALL fail2ban # fail2ban - ban IPs of failing ssh queries
+INSTALL inspec # for inspec tests
 RUN apt-file update
 IF_NOT RUN npm -g ll mermaid
 	RUN npm install -g mermaid
@@ -144,6 +145,8 @@ ENDIF
 # Git repos
 RUN cd /space/git
 
+RUN inspec exec controls
+
 # jid jq explorer
 # TODO install go
 #RUN go get -u github.com/simeji/jid/cmd/jid
@@ -164,6 +167,32 @@ IF_NOT FILE_EXISTS /home/imiell/.tmux/plugins/tpm
 ENDIF
 
 LOGOUT
+
+# INSPECS
+inspec supermarket --log-level=debug exec dev-sec/linux-baseline
+# * CIS Distribution Independent Linux Benchmark dev-sec/cis-linux-benchmark
+# * CIS Docker Benchmark dev-sec/cis-docker-benchmark
+# * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
+# * CVE-2016-5195 ndobson/cve-2016-5195
+# * DevSec Apache Baseline dev-sec/apache-baseline
+# * DevSec Linux Patch Baseline dev-sec/linux-patch-baseline
+# * DevSec MySQl Baseline dev-sec/mysql-baseline
+# * DevSec Nginx Baseline dev-sec/nginx-baseline
+# * DevSec PHP Baseline dev-sec/php-baseline
+# * DevSec PostgreSQL Baseline dev-sec/postgres-baseline
+# * DevSec SSH Baseline dev-sec/ssh-baseline
+# * DevSec SSL/TLS Baseline dev-sec/ssl-basline
+# * DevSec Windows Baseline dev-sec/windows-baseline
+# * DevSec Windows Patch Baseline dev-sec/windows-patch-baseline
+# * inspec_java awim/inspec_java
+# * InSpec Wrapper Profile Example adamleff/inspec-wrapper-profile-example
+# * profile-test bigbam505/profile-test
+# * SSL Certificate - InSpec Profile alexpop/ssl-certificate-profile
+# * /tmp Compliance Profile nathenharvey/tmp-compliance-profile
+# * utils alfresco/utils
+# * WannaCry Exploit Mitigation adamleff/wannacry-exploit
+
+
 # Pull my dev tools image from Dockerhub
 #RUN docker pull imiell/docker-dev-tools-image
 
