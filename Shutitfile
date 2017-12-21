@@ -43,6 +43,7 @@ INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
+INSTALL auditd
 # For Jenkins
 INSTALL groovy
 # IPTables state viewer
