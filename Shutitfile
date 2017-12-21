@@ -174,15 +174,15 @@ LOGOUT
 # Set logging for inspec
 LOG DEBUG
 # INSPECS
-RUN inspec supermarket --log-level=debug exec dev-sec/linux-baseline | tee /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec dev-sec/php-baseline | tee -a /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec dev-sec/postgres-baseline | tee -a /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec dev-sec/ssh-baseline | tee -a /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec dev-sec/ssl-baseline | tee -a /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec dev-sec/linux-patch-baseline | tee -a /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec dev-sec/cis-linux-benchmark | tee -a /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec dev-sec/apache-benchmark | tee -a /tmp/inspec_output.log || true
-RUN inspec supermarket --log-level=debug exec ndobson/cve-2016-5195 | tee -a /tmp/inspec_output.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/linux-baseline | tee /tmp/inspec_linux_baseline.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/php-baseline | tee -a /tmp/inspec_php_baseline.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/postgres-baseline | tee -a /tmp/inspec_postgres_baseline.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/ssh-baseline | tee -a /tmp/inspec_ssh_baseline.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/ssl-baseline | tee -a /tmp/inspec_ssl_baseline.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/linux-patch-baseline | tee -a /tmp/inspec_linux_patch_baseline.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/cis-linux-benchmark | tee -a /tmp/inspec_cis_linux_benchmark.log || true
+RUN inspec supermarket --log-level=debug exec dev-sec/apache-benchmark | tee -a /tmp/inspec_apache_benchmark.log || true
+RUN inspec supermarket --log-level=debug exec ndobson/cve-2016-5195 | tee -a /tmp/inspec_cve_2016_5195.log || true
 # * CIS Docker Benchmark dev-sec/cis-docker-benchmark
 # * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
 # * DevSec MySQl Baseline dev-sec/mysql-baseline
