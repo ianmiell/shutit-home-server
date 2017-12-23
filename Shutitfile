@@ -29,6 +29,7 @@ INSTALL git-extras
 INSTALL npm
 INSTALL nodejs-legacy
 INSTALL asciidoc
+INSTALL asciidoctor
 INSTALL awscli
 INSTALL python3-pip
 INSTALL jq
