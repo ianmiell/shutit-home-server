@@ -45,6 +45,7 @@ INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
 INSTALL auditd
+INSTALL nmap
 # For Jenkins
 INSTALL groovy
 # IPTables state viewer
