@@ -78,7 +78,7 @@ IF_NOT RUN docker version
 	RUN apt install -y docker-ce
 ENDIF
 # Add imiell to the docker user group
-RUN usermod -G docker -a imiell 
+RUN usermod -G docker -a imiell
 
 
 # Set up local storage
@@ -173,18 +173,41 @@ ENDIF
 
 LOGOUT
 
-# Set logging for inspec
-LOG DEBUG
+# TODO: add these lines to /etc/sysctl.d/99-sysctl.conf and run sysctl -p
+#net.ipv4.icmp_ratelimit = 100
+#net.ipv4.icmp_ratemask = 88089
+#net.ipv4.tcp_timestamps = 0
+#net.ipv4.conf.all.arp_ignore = 1
+#net.ipv4.conf.all.arp_announce = 2
+#net.ipv4.tcp_rfc1337 = 1
+#net.ipv4.conf.default.accept_source_route = 0
+#net.ipv4.conf.default.accept_redirects = 0
+#net.ipv4.conf.all.secure_redirects = 0
+#net.ipv4.conf.default.send_redirects = 1
+#net.ipv4.conf.all.log_martians = 1
+#net.ipv4.conf.default.log_martians = 1
+#net.ipv6.conf.all.disable_ipv6 = 1
+#net.ipv4.conf.default.secure_redirects = 0
+#net.ipv4.conf.default.send_redirects = 0
+#net.ipv6.conf.default.accept_redirects = 0
+#net.ipv6.conf.default.router_solicitations = 0
+#net.ipv6.conf.default.accept_ra_rtr_pref = 0
+#net.ipv4.conf.all.send_redirects = 0
+#net.ipv6.conf.all.accept_redirects = 0
+#net.ipv6.conf.default.accept_ra_pinfo = 0
+#net.ipv6.conf.default.accept_ra_defrtr = 0
+#net.ipv6.conf.all.accept_ra = 0
+#net.ipv6.conf.default.autoconf = 0
+#net.ipv6.conf.default.dad_transmits = 0
+#net.ipv6.conf.default.accept_ra = 0
+#net.ipv6.conf.default.max_addresses = 1
+#kernel.sysrq = 0
+
 # INSPECS
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/linux-baseline | tee /tmp/inspec_linux_baseline.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/php-baseline | tee /tmp/inspec_php_baseline.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/postgres-baseline | tee /tmp/inspec_postgres_baseline.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/ssh-baseline | tee /tmp/inspec_ssh_baseline.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/ssl-baseline | tee /tmp/inspec_ssl_baseline.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/linux-patch-baseline | tee /tmp/inspec_linux_patch_baseline.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/cis-linux-benchmark | tee /tmp/inspec_cis_linux_benchmark.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color dev-sec/apache-benchmark | tee /tmp/inspec_apache_benchmark.log 2>&1 || true
-RUN inspec supermarket --log-level=debug exec --no-color ndobson/cve-2016-5195 | tee /tmp/inspec_cve_2016_5195.log 2>&1 || true
+RUN cd /space/git
+RUN git clone  https://github.com/ianmiell/inspec-profiles
+RUN cd inspec-profiles/dev-sec-wrapper
+RUN inspec exec .
 # * CIS Docker Benchmark dev-sec/cis-docker-benchmark
 # * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
 # * DevSec MySQl Baseline dev-sec/mysql-baseline
@@ -200,4 +223,3 @@ RUN inspec supermarket --log-level=debug exec --no-color ndobson/cve-2016-5195 |
 
 # Pull my dev tools image from Dockerhub
 #RUN docker pull imiell/docker-dev-tools-image
-
