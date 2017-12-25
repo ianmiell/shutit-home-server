@@ -44,9 +44,13 @@ INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
+# FOr sec standards
 INSTALL auditd
 INSTALL nmap
+# X disk usage analyser
 INSTALL xdiskusage
+# ncurses disk usage analyser
+INSTALL ncdu
 # For Jenkins
 INSTALL groovy
 # IPTables state viewer
