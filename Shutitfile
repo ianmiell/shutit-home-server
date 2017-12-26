@@ -67,10 +67,11 @@ IF_NOT RUN which gtop
 ENDIF
 RUN pip install --upgrade pip
 
-# Install ShutIt, naturally
-RUN pip install shutit
+# ShutIt should be installed already, naturally
+#RUN pip install shutit
 RUN pip install requests
 RUN pip install coverage
+RUN pip install python-twitter
 
 # Install docker
 IF_NOT RUN docker version
