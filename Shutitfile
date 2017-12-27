@@ -44,6 +44,8 @@ INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
+# For authoring
+INSTALL pandoc
 # FOr sec standards
 INSTALL auditd
 INSTALL nmap
