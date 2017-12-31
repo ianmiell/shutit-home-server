@@ -12,6 +12,7 @@ SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
 
 # Install required packages
+INSTALL etherwake
 INSTALL openssh-server
 INSTALL run-one
 INSTALL apache2
@@ -214,7 +215,9 @@ LOGOUT
 
 # INSPECS
 RUN cd /space/git
-RUN git clone  https://github.com/ianmiell/inspec-profiles
+IF_NOT FILE_EXISTS /space/git/inspec-profiles
+	RUN git clone  https://github.com/ianmiell/inspec-profiles
+ENDIF
 RUN cd inspec-profiles/dev-sec-wrapper
 RUN inspec exec .
 # * CIS Docker Benchmark dev-sec/cis-docker-benchmark
