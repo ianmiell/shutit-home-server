@@ -11,6 +11,11 @@ ASSERT_OUTPUT Ubuntu
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
 
+# youtube-dl
+RUN wget https://yt-dl.org/latest/youtube-dl -O /usr/local/bin/youtube-dl
+RUN chmod a+x /usr/local/bin/youtube-dl
+RUN hash -r
+
 # Install required packages
 INSTALL etherwake
 INSTALL openssh-server
@@ -75,6 +80,12 @@ RUN pip install --upgrade pip
 RUN pip install requests
 RUN pip install coverage
 RUN pip install python-twitter
+
+# Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
+RUN apt-get install software-properties-common
+RUN add-apt-repository ppa:certbot/certbot
+RUN apt-get update
+INSTALL python-certbot-apache 
 
 # Install docker
 IF_NOT RUN docker version
@@ -147,6 +158,8 @@ RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 #	RUN gem install rubocop
 #	RUN gem install cookstyle
 #ENDIF
+
+RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
 
 # Log me in as imiell
 USER imiell
