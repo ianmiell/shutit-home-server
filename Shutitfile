@@ -11,10 +11,6 @@ ASSERT_OUTPUT Ubuntu
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
 
-# youtube-dl
-RUN wget https://yt-dl.org/latest/youtube-dl -O /usr/local/bin/youtube-dl
-RUN chmod a+x /usr/local/bin/youtube-dl
-RUN hash -r
 
 # Install required packages
 INSTALL etherwake
@@ -67,12 +63,6 @@ INSTALL iptstate
 INSTALL fail2ban
 RUN apt-file update
 RUN apt-get autoremove -y
-IF_NOT RUN npm -g ll mermaid
-	RUN npm install -g mermaid
-ENDIF
-IF_NOT RUN which gtop
-	RUN npm install -g gtop
-ENDIF
 RUN pip install --upgrade pip
 
 # ShutIt should be installed already, naturally
@@ -101,6 +91,12 @@ ENDIF
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell
 
+# youtube-dl
+IF_NOT FILE_EXISTS /usr/local/bin/youtube-dl
+	RUN wget https://yt-dl.org/latest/youtube-dl -O /usr/local/bin/youtube-dl
+	RUN chmod a+x /usr/local/bin/youtube-dl
+	RUN hash -r
+ENDIF
 
 # Set up local storage
 RUN mkdir -p /media/storage_{1,2}
@@ -225,6 +221,13 @@ LOGOUT
 #net.ipv6.conf.default.accept_ra = 0
 #net.ipv6.conf.default.max_addresses = 1
 #kernel.sysrq = 0
+
+IF_NOT RUN npm -g ll mermaid
+	RUN npm install -g mermaid
+ENDIF
+IF_NOT RUN which gtop
+	RUN npm install -g gtop
+ENDIF
 
 # INSPECS
 RUN cd /space/git
