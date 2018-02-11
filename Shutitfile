@@ -66,6 +66,8 @@ INSTALL groovy
 INSTALL iptstate
 # fail2ban - ban IPs of failing ssh queries
 INSTALL fail2ban
+# Tasksel - see notes/ubuntu
+INSTALL tasksel
 RUN apt-file update
 RUN apt-get autoremove -y
 RUN pip install --upgrade pip
@@ -164,10 +166,10 @@ RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
 
 # Auditd
-IF_NOT RUN grep '-a exit,always -F arch=b64 -S execve' /etc/audit/audit.rules
+IF_NOT RUN grep -- '-a exit,always -F arch=b64 -S execve' /etc/audit/audit.rules
 	RUN echo '-a exit,always -F arch=b64 -S execve' >> /etc/audit/audit.rules
 ENDIF
-IF_NOT RUN grep '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
+IF_NOT RUN grep -- '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
 	RUN echo '-a exit,always -F arch=b32 -S execve' >> /etc/audit/audit.rules
 ENDIF
 
