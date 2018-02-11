@@ -13,6 +13,10 @@ ASSERT_OUTPUT 1
 
 
 # Install required packages
+# Required for gems
+INSTALL libtool
+INSTALL autoconf
+# gems requirements done
 INSTALL socat
 INSTALL etherwake
 INSTALL openssh-server
@@ -49,7 +53,7 @@ INSTALL virtualbox-guest-dkms
 INSTALL ioping
 # For authoring
 INSTALL pandoc
-# FOr sec standards
+# For sec standards
 INSTALL auditd
 INSTALL nmap
 # X disk usage analyser
