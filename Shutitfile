@@ -155,7 +155,16 @@ RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 #	RUN gem install cookstyle
 #ENDIF
 
+# Sysstat
 RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
+
+# Auditd
+IF_NOT RUN grep '-a exit,always -F arch=b64 -S execve' /etc/audit/audit.rules
+	RUN echo '-a exit,always -F arch=b64 -S execve' >> /etc/audit/audit.rules
+ENDIF
+IF_NOT RUN grep '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
+	RUN echo '-a exit,always -F arch=b32 -S execve' >> /etc/audit/audit.rules
+ENDIF
 
 # Log me in as imiell
 USER imiell
