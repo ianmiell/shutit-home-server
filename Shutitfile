@@ -13,6 +13,7 @@ ASSERT_OUTPUT 1
 
 
 # Install required packages
+INSTALL socat
 INSTALL etherwake
 INSTALL openssh-server
 INSTALL run-one
