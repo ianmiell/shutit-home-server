@@ -84,6 +84,15 @@ RUN add-apt-repository -y ppa:certbot/certbot
 RUN apt-get -y update
 INSTALL python-certbot-apache 
 
+# Powershell
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+# Register the Microsoft Ubuntu repository
+RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
+# Update apt-get
+RUN apt-get update
+# Install PowerShell
+INSTALL powershell
+
 # Install docker
 IF_NOT RUN docker version
 	INSTALL apt-transport-https
