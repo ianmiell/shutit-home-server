@@ -191,7 +191,7 @@ IF_NOT FILE_EXISTS /home/imiell/.dotfiles
 	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
 	RUN cd .dotfiles
 	RUN ./script/bootstrap
-	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite=O']
+	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite all=O']
 ENDIF
 
 # Git repos
