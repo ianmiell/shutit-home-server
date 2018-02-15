@@ -221,7 +221,17 @@ IF_NOT FILE_EXISTS /home/imiell/.tmux/plugins/tpm
 	RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ENDIF
 
+# Generate an ssh key
+IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
+	RUN ssh-keygen
+	# Note that the response to 'already exists' below prevents overwrite here.
+	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
+ENDIF
+
 LOGOUT
+
+
+RUN chown -R imiell: /space
 
 # TODO: add these lines to /etc/sysctl.d/99-sysctl.conf and run sysctl -p
 #net.ipv4.icmp_ratelimit = 100
