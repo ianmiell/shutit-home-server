@@ -18,6 +18,7 @@ INSTALL libtool
 INSTALL autoconf
 # gems requirements done
 INSTALL postgresql
+INSTALL libreoffice
 INSTALL socat
 INSTALL etherwake
 INSTALL openssh-server
@@ -53,6 +54,7 @@ INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
 INSTALL sysstat
+INSTALL ubuntu-gnome-desktop^
 # For authoring
 INSTALL pandoc
 # For sec standards
@@ -184,6 +186,8 @@ IF_NOT RUN grep -- '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
 	RUN echo '-a exit,always -F arch=b32 -S execve' >> /etc/audit/audit.rules
 ENDIF
 
+RUN apt -y upgrade
+
 # Log me in as imiell
 USER imiell
 # If it's not been done before, check out my dotfiles and set it up
@@ -250,11 +254,12 @@ LOGOUT
 #kernel.sysrq = 0
 
 IF_NOT RUN npm -g ll mermaid
-	RUN npm install -g mermaid
+	RUN npm install -g mermaid > /dev/null 2>&1
 ENDIF
 IF_NOT RUN which gtop
-	RUN npm install -g gtop
+	RUN npm install -g gtop > /dev/null 2>&1
 ENDIF
+
 
 # INSPECS
 RUN cd /space/git
