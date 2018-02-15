@@ -17,6 +17,7 @@ ASSERT_OUTPUT 1
 INSTALL libtool
 INSTALL autoconf
 # gems requirements done
+INSTALL postgresql
 INSTALL socat
 INSTALL etherwake
 INSTALL openssh-server
