@@ -51,6 +51,7 @@ INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
+INSTALL sysstat
 # For authoring
 INSTALL pandoc
 # For sec standards
