@@ -86,7 +86,7 @@ RUN pip install python-twitter
 RUN apt-get -y install software-properties-common
 RUN add-apt-repository -y ppa:certbot/certbot
 RUN apt-get -y update
-INSTALL python-certbot-apache 
+INSTALL python-certbot-apache
 
 # Powershell
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
@@ -94,6 +94,9 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
 # Update apt-get
 RUN apt-get update
+# https://packages.ubuntu.com/en/xenial/amd64/libicu55/download
+RUN wget -q http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu55_55.1-7ubuntu0.3_amd64.deb
+RUN dpkg -i libicu55_55.1-7ubuntu0.3_amd64.deb
 # Install PowerShell
 INSTALL powershell
 
