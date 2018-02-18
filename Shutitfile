@@ -23,6 +23,7 @@ ENDIF
 INSTALL libtool
 INSTALL autoconf
 # gems requirements done
+INSTALL maven
 INSTALL postgresql
 INSTALL libreoffice
 INSTALL socat
