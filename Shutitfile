@@ -78,9 +78,11 @@ RUN pip install --upgrade pip
 
 # ShutIt should be installed already, naturally
 #RUN pip install shutit
-RUN pip install requests
-RUN pip install coverage
-RUN pip install python-twitter
+RUN pip install -U requests
+RUN pip install -U coverage
+RUN pip install -U python-twitter
+RUN pip install -U setuptools
+RUN pip install -U twine
 
 # Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
 RUN apt-get -y install software-properties-common
