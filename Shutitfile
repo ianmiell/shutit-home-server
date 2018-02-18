@@ -2,13 +2,10 @@
 SEND whoami
 ASSERT_OUTPUT root
 
-REPLACE_LINE ['filename=/tmp/test2','line=asd','pattern=asd']
-ENSURE_LINE ['filename=/tmp/test','line=asd']
 
 # Check this is Ubuntu
 SEND lsb_release -d -s | awk '{print $1}'
 ASSERT_OUTPUT Ubuntu
-
 
 # We assert here the user imiell was set up by the OS installation process
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
@@ -17,10 +14,9 @@ ASSERT_OUTPUT 1
 RUN usermod -aG sudo imiell
 
 # Add a nexus user
-IF_NOT RUN is -u nexus
+IF_NOT RUN id -u nexus
 	RUN useradd nexus
 ENDIF
-
 
 # Install required packages
 # Required for gems
@@ -181,6 +177,8 @@ RUN chown imiell: /var/jenkins
 #https://ubuntuforums.org/showthread.php?t=1842371 - speed up login
 RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 
+#REPLACE_LINE ['filename=/tmp/test2','line=asd','pattern=asd']
+ENSURE_LINE ['filename=/etc/security/limits.conf','line=nexus - nofile 65536','pattern=nexus - nofile.*']
 
 #IF_NOT RUN chef
 #	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
