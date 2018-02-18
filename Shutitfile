@@ -11,6 +11,13 @@ ASSERT_OUTPUT Ubuntu
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
 
+RUN usermod -aG sudo imiell
+
+# Add a nexus user
+IF_NOT is -u nexus
+	RUN useradd nexus
+ENDIF
+
 
 # Install required packages
 # Required for gems
