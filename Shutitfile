@@ -2,6 +2,9 @@
 SEND whoami
 ASSERT_OUTPUT root
 
+REPLACE_LINE ['filename=/tmp/test2','line=asd','pattern=asd']
+ENSURE_LINE ['filename=/tmp/test','line=asd']
+
 # Check this is Ubuntu
 SEND lsb_release -d -s | awk '{print $1}'
 ASSERT_OUTPUT Ubuntu
@@ -14,7 +17,7 @@ ASSERT_OUTPUT 1
 RUN usermod -aG sudo imiell
 
 # Add a nexus user
-IF_NOT is -u nexus
+IF_NOT RUN is -u nexus
 	RUN useradd nexus
 ENDIF
 
