@@ -71,6 +71,7 @@ INSTALL nmap
 INSTALL xdiskusage
 # ncurses disk usage analyser
 INSTALL ncdu
+INSTALL btrfs-tools
 # For Jenkins
 INSTALL groovy
 # IPTables state viewer
