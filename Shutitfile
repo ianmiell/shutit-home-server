@@ -61,6 +61,7 @@ INSTALL ubuntu-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
 INSTALL sysstat
+INSTALL fdupes
 INSTALL ubuntu-gnome-desktop^
 # For authoring
 INSTALL pandoc
@@ -78,6 +79,8 @@ INSTALL groovy
 INSTALL iptstate
 # fail2ban - ban IPs of failing ssh queries
 INSTALL fail2ban
+# Text-only browser
+INSTALL links
 # Tasksel - see notes/ubuntu
 INSTALL tasksel
 INSTALL php
@@ -99,6 +102,11 @@ RUN apt-get -y install software-properties-common
 RUN add-apt-repository -y ppa:certbot/certbot
 RUN apt-get -y update
 INSTALL python-certbot-apache
+
+# Handbrake
+RUN add-apt-repository -y ppa:stebbins/handbrake-releases
+RUN apt-get -y update
+INSTALL handbrake-cli
 
 # Powershell
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
