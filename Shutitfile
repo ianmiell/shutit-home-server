@@ -196,6 +196,11 @@ ENSURE_LINE ['/etc/systemd/logind.conf','HandleLidSwitch=ignore']
 RUN systemd restart systemd-logind.service
 ENSURE_LINE ['/etc/UPower/UPower.conf','IgnoreLid=true']
 RUN systemd restart upower.service
+ENSURE_LINE ['/etc/NetworkManager/conf.d/default-wifi-powersave-on.conf','wifi.powersave = 2']
+
+# Takes effect on next reboot
+# https://unix.stackexchange.com/questions/269661/how-to-turn-off-wireless-power-management-permanently
+RUN sed -i 's/wifi.powersave.*/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 
 #IF_NOT RUN chef
 #	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
