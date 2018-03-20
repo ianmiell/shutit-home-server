@@ -312,7 +312,7 @@ IF_NOT FILE_EXISTS /space/git/inspec-profiles
 	RUN git clone  https://github.com/ianmiell/inspec-profiles
 ENDIF
 RUN cd inspec-profiles/dev-sec-wrapper
-RUN inspec exec .
+RUN inspec exec . || true
 # * CIS Docker Benchmark dev-sec/cis-docker-benchmark
 # * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
 # * DevSec MySQl Baseline dev-sec/mysql-baseline
