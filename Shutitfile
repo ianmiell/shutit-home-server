@@ -133,6 +133,7 @@ IF_NOT RUN docker version
 ENDIF
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell
+RUN usermod -G staff -a imiell
 
 # youtube-dl
 IF_NOT FILE_EXISTS /usr/local/bin/youtube-dl
