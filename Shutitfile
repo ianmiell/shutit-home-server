@@ -109,6 +109,14 @@ RUN add-apt-repository -y ppa:stebbins/handbrake-releases
 RUN apt-get -y update
 INSTALL handbrake-cli
 
+# Handbrake
+IF_NOT RUN bccmd -h
+	RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D4284CDD
+	RUN echo "deb https://repo.iovisor.org/apt/xenial xenial main" | tee /etc/apt/sources.list.d/iovisor.list
+	RUN apt-get update -y
+	RUN apt-get install -y bcc-tools libbcc-examples linux-headers-$(uname -r)
+ENDIF
+
 # Powershell
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 # Register the Microsoft Ubuntu repository
