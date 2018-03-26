@@ -63,6 +63,7 @@ INSTALL ioping
 INSTALL sysstat
 INSTALL fdupes
 INSTALL ubuntu-gnome-desktop^
+INSTALL html2text
 # For authoring
 INSTALL pandoc
 # For sec standards
@@ -182,6 +183,9 @@ RUN a2enmod php7.0
 #	RUN dpkg -i vagrant_1.8.6_x86_64.deb
 #	RUN rm vagrant_1.8.6_x86_64.deb
 #ENDIF
+
+# Terraform
+RUN wget https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip && unzip terraform_0.11.3_linux_amd64.zip && mv terraform /usr/local/bin && rm -f terraform*
 
 # Jenkins
 RUN mkdir -p /var/jenkins
