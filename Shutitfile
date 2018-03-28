@@ -205,11 +205,11 @@ RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 
 #REPLACE_LINE ['filename=/tmp/test2','line=asd','pattern=asd']
 ENSURE_LINE ['filename=/etc/security/limits.conf','line=nexus - nofile 65536','pattern=nexus - nofile.*']
-ENSURE_LINE ['/etc/systemd/logind.conf','HandleLidSwitch=ignore']
-RUN systemd restart systemd-logind.service
-ENSURE_LINE ['/etc/UPower/UPower.conf','IgnoreLid=true']
-RUN systemd restart upower.service
-ENSURE_LINE ['/etc/NetworkManager/conf.d/default-wifi-powersave-on.conf','wifi.powersave = 2']
+#ENSURE_LINE ['/etc/systemd/logind.conf','HandleLidSwitch=ignore']
+#RUN systemd restart systemd-logind.service
+#ENSURE_LINE ['/etc/UPower/UPower.conf','IgnoreLid=true']
+#RUN systemd restart upower.service
+#ENSURE_LINE ['/etc/NetworkManager/conf.d/default-wifi-powersave-on.conf','wifi.powersave = 2']
 
 # Takes effect on next reboot
 # https://unix.stackexchange.com/questions/269661/how-to-turn-off-wireless-power-management-permanently
@@ -317,6 +317,9 @@ ENDIF
 IF_NOT RUN which gtop
 	RUN npm install -g gtop > /dev/null 2>&1
 ENDIF
+
+# ensure vi is the default
+RUN echo 3 | update-alternatives --config editor
 
 
 # INSPECS
