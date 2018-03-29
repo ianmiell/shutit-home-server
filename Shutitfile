@@ -66,6 +66,8 @@ INSTALL ioping
 INSTALL sysstat
 INSTALL fdupes
 INSTALL html2text
+INSTALL ntp
+RUN timedatectl set-ntp on
 # For authoring
 INSTALL pandoc
 # For sec standards
@@ -337,7 +339,7 @@ RUN echo 3 | update-alternatives --config editor
 # INSPECS
 RUN cd /space/git
 IF_NOT FILE_EXISTS /space/git/inspec-profiles
-	RUN git clone  https://github.com/ianmiell/inspec-profiles
+	RUN git clone https://github.com/ianmiell/inspec-profiles
 ENDIF
 RUN cd inspec-profiles/dev-sec-wrapper
 RUN inspec exec . || true
