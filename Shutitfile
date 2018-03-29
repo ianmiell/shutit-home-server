@@ -1,7 +1,9 @@
 # We assert here that we are running as root
+
 SEND whoami
 ASSERT_OUTPUT root
 
+LOG DEBUG
 
 # Check this is Ubuntu
 SEND lsb_release -d -s | awk '{print $1}'
@@ -107,11 +109,11 @@ IF_NOT RUN apt-cache policy | grep certbot
 ENDIF
 
 # Handbrake
-IF_NOT RUN apt-cache policy | grep stebbins
-	RUN add-apt-repository -y ppa:stebbins/handbrake-releases || true
-	RUN apt-get -y update || true
-	RUN apt-get -y install handbrake-cli || true
-ENDIF
+#IF_NOT RUN apt-cache policy | grep stebbins
+#	RUN add-apt-repository -y ppa:stebbins/handbrake-releases || true
+#	RUN apt-get -y update || true
+#	RUN apt-get -y install handbrake-cli || true
+#ENDIF
 
 # Handbrake
 IF_NOT RUN bccmd -h
@@ -193,7 +195,7 @@ RUN a2enmod headers
 RUN a2enmod proxy_balancer
 RUN a2enmod proxy_connect
 RUN a2enmod proxy_html
-RUN a2enmod php7.0
+RUN a2enmod php7.2
 
 # Vagrant 1.8.6 required
 #IF_NOT RUN vagrant version
