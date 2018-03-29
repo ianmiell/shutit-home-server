@@ -58,11 +58,11 @@ INSTALL golang-go
 INSTALL vagrant
 INSTALL gnuplot
 INSTALL ubuntu-desktop
+INSTALL ubuntu-gnome-desktop
 INSTALL virtualbox-guest-dkms
 INSTALL ioping
 INSTALL sysstat
 INSTALL fdupes
-INSTALL ubuntu-gnome-desktop^
 INSTALL html2text
 # For authoring
 INSTALL pandoc
@@ -100,14 +100,18 @@ RUN pip install -U twine
 
 # Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
 RUN apt-get -y install software-properties-common
-RUN add-apt-repository -y ppa:certbot/certbot
-RUN apt-get -y update
-INSTALL python-certbot-apache
+IF_NOT RUN apt-cache policy | grep certbot
+	RUN add-apt-repository -y ppa:certbot/certbot
+	RUN apt-get -y update
+	INSTALL python-certbot-apache
+ENDIF
 
 # Handbrake
-RUN add-apt-repository -y ppa:stebbins/handbrake-releases
-RUN apt-get -y update
-INSTALL handbrake-cli
+IF_NOT RUN apt-cache policy | grep stebbins
+	RUN add-apt-repository -y ppa:stebbins/handbrake-releases || true
+	RUN apt-get -y update || true
+	RUN apt-get -y install handbrake-cli || true
+ENDIF
 
 # Handbrake
 IF_NOT RUN bccmd -h
@@ -129,6 +133,11 @@ RUN dpkg -i libicu55_55.1-7ubuntu0.3_amd64.deb
 # Install PowerShell
 INSTALL powershell
 
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
+RUN apt-get update -y
+RUN apt-get install -y google-chrome-stable
+
 # Install docker
 IF_NOT RUN docker version
 	INSTALL apt-transport-https
@@ -140,6 +149,7 @@ IF_NOT RUN docker version
 	RUN apt-get update
 	RUN apt install -y docker-ce
 ENDIF
+
 # Add imiell to the docker user group
 RUN usermod -G docker -a imiell
 RUN usermod -G staff -a imiell
