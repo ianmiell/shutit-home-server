@@ -220,7 +220,7 @@ RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 #REPLACE_LINE ['filename=/tmp/test2','line=asd','pattern=asd']
 ENSURE_LINE ['filename=/etc/security/limits.conf','line=nexus - nofile 65536','pattern=nexus - nofile.*']
 IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
-	RUN sed -i 's/HandleLidSwitch.*/HandleLidSwitch=ignore' /etc/systemd/logind.conf
+	RUN sed -i 's/HandleLidSwitch.*/HandleLidSwitch=ignore' /etc/systemd/logind.conf || true
 	RUN systemd restart systemd-logind.service
 ENDIF
 IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
@@ -229,7 +229,7 @@ IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
 ENDIF
 
 IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
-	RUN sed -i 's/IgnoreLid=.*/IgnoreLid=true' /etc/UPower/UPower.conf
+	RUN sed -i 's/IgnoreLid=.*/IgnoreLid=true' /etc/UPower/UPower.conf || true
 	RUN systemd restart upower.service
 ENDIF
 IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
@@ -243,7 +243,7 @@ RUN sed -i 's/wifi.powersave.*/wifi.powersave = 2/' /etc/NetworkManager/conf.d/d
 # Power management
 RUN systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 IF_NOT RUN grep SUSPEND_METHODS="none" /etc/default/acpi-support
-	RUN sed -i 's/SUSPEND_METHODS=".*/SUSPEND_METHODS="none"/' /etc/default/acpi-support
+	RUN sed -i 's/SUSPEND_METHODS=".*/SUSPEND_METHODS="none"/' /etc/default/acpi-support || true
 	RUN /etc/init.d/acpid restart
 ENDIF
 
