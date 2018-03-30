@@ -71,6 +71,7 @@ INSTALL software-properties-common
 INSTALL curl
 INSTALL apt-transport-https
 INSTALL ca-certificates
+INSTALL ruby-dev
 RUN timedatectl set-ntp on
 # For authoring
 INSTALL pandoc
