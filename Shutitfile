@@ -128,13 +128,15 @@ IF_NOT RUN bccmd -h
 ENDIF
 
 # Powershell
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-# Register the Microsoft Ubuntu repository
-RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
-# Update apt
-RUN apt update
-# Install PowerShell
-INSTALL powershell
+IF_NOT RUN apt-cache policy | grep microsoft
+	RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+	# Register the Microsoft Ubuntu repository
+	RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
+	# Update apt
+	RUN apt update
+	# Install PowerShell
+	INSTALL powershell
+ENDIF
 
 IF_NOT RUN apt-cache policy | grep grub-customizer
 	RUN add-apt-repository ppa:danielrichter2007/grub-customizer
