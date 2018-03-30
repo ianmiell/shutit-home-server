@@ -67,6 +67,10 @@ INSTALL sysstat
 INSTALL fdupes
 INSTALL html2text
 INSTALL ntp
+INSTALL software-properties-common
+INSTALL curl
+INSTALL apt-transport-https
+INSTALL ca-certificates
 RUN timedatectl set-ntp on
 # For authoring
 INSTALL pandoc
@@ -90,9 +94,7 @@ INSTALL links
 INSTALL tasksel
 INSTALL php
 INSTALL libapache2-mod-php
-RUN apt-file update
-RUN apt-get autoremove -y
-RUN pip install --upgrade pip
+
 
 # ShutIt should be installed already, naturally
 #RUN pip install shutit
@@ -103,57 +105,60 @@ RUN pip install -U setuptools
 RUN pip install -U twine
 
 # Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
-RUN apt-get -y install software-properties-common
 IF_NOT RUN apt-cache policy | grep certbot
 	RUN add-apt-repository -y ppa:certbot/certbot
-	RUN apt-get -y update
+	RUN apt -y update
 	INSTALL python-certbot-apache
 ENDIF
 
 # Handbrake
 #IF_NOT RUN apt-cache policy | grep stebbins
 #	RUN add-apt-repository -y ppa:stebbins/handbrake-releases || true
-#	RUN apt-get -y update || true
-#	RUN apt-get -y install handbrake-cli || true
+#	RUN apt -y update || true
+#	RUN apt -y install handbrake-cli || true
 #ENDIF
 
 # Handbrake
 IF_NOT RUN bccmd -h
 	RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D4284CDD
 	RUN echo "deb https://repo.iovisor.org/apt/xenial xenial main" | tee /etc/apt/sources.list.d/iovisor.list
-	RUN apt-get update -y
-	RUN apt-get install -y bcc-tools libbcc-examples linux-headers-$(uname -r)
+	RUN apt update -y
+	RUN apt install -y bcc-tools libbcc-examples linux-headers-$(uname -r)
 ENDIF
 
 # Powershell
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 # Register the Microsoft Ubuntu repository
 RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
-# Update apt-get
-RUN apt-get update
+# Update apt
+RUN apt update
 # Install PowerShell
 INSTALL powershell
 
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
-RUN apt-get update -y
-RUN apt-get install -y google-chrome-stable
+IF_NOT RUN apt-cache policy | grep grub-customizer
+	RUN add-apt-repository ppa:danielrichter2007/grub-customizer
+	RUN apt install -y grub-customizer
+ENDIF
+
+# Google Chrome
+IF_NOT RUN google-chrome --version
+	RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+	RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
+	RUN apt update -y
+	RUN apt install -y google-chrome-stable
+ENDIF
 
 # Install docker
 IF_NOT RUN docker version
-	INSTALL apt-transport-https
-	INSTALL ca-certificates
-	INSTALL curl
-	INSTALL software-properties-common
 	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-	RUN apt-get update
+	RUN apt update
 	RUN apt install -y docker-ce
+	# Add imiell to the docker user group
+	RUN usermod -G docker -a imiell
+	RUN usermod -G staff -a imiell
 ENDIF
 
-# Add imiell to the docker user group
-RUN usermod -G docker -a imiell
-RUN usermod -G staff -a imiell
 
 # youtube-dl
 IF_NOT FILE_EXISTS /usr/local/bin/youtube-dl
@@ -246,11 +251,21 @@ ENDIF
 
 #IF_NOT RUN chef
 #	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
-#	RUN apt-get install chefdk_2.3.4-1_amd64.deb
+#	RUN apt install chefdk_2.3.4-1_amd64.deb
 #	RUN gem install rake
 #	RUN gem install rubocop
 #	RUN gem install cookstyle
 #ENDIF
+
+RUN apt -y upgrade
+
+# apt cleanup
+RUN apt-file update
+RUN apt autoremove -y
+RUN apt clean
+
+# pip upgrade
+RUN pip install --upgrade pip
 
 # Sysstat
 RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
@@ -262,8 +277,6 @@ ENDIF
 IF_NOT RUN grep -- '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
 	RUN echo '-a exit,always -F arch=b32 -S execve' >> /etc/audit/audit.rules
 ENDIF
-
-RUN apt -y upgrade
 
 # Log me in as imiell
 USER imiell
