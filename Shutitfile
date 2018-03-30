@@ -131,9 +131,6 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
 # Update apt-get
 RUN apt-get update
-# https://packages.ubuntu.com/en/xenial/amd64/libicu55/download
-RUN wget -q http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu55_55.1-7ubuntu0.3_amd64.deb
-RUN dpkg -i libicu55_55.1-7ubuntu0.3_amd64.deb
 # Install PowerShell
 INSTALL powershell
 
@@ -221,20 +218,20 @@ RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 ENSURE_LINE ['filename=/etc/security/limits.conf','line=nexus - nofile 65536','pattern=nexus - nofile.*']
 IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
 	RUN sed -i 's/HandleLidSwitch.*/HandleLidSwitch=ignore' /etc/systemd/logind.conf || true
-	RUN systemd restart systemd-logind.service
+	RUN systemctl daemon-reload && systemctl restart systemd-logind.service
 ENDIF
 IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
 	RUN echo HandleLidSwitch=ignore >> /etc/systemd/logind.conf
-	RUN systemd restart systemd-logind.service
+	RUN systemctl daemon-reload && systemctl restart systemd-logind.service
 ENDIF
 
 IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
 	RUN sed -i 's/IgnoreLid=.*/IgnoreLid=true' /etc/UPower/UPower.conf || true
-	RUN systemd restart upower.service
+	RUN systemctl daemon-reload && systemctl restart upower.service
 ENDIF
 IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
 	RUN echo IgnoreLid=true >> /etc/UPower/UPower.conf
-	RUN systemd restart upower.service
+	RUN systemctl daemon-reload &&  systemctl restart upower.service
 ENDIF
 
 # Takes effect on next reboot
