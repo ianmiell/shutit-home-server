@@ -40,7 +40,6 @@ INSTALL tmux
 INSTALL openjdk-8-jre
 INSTALL alien
 INSTALL brasero
-INSTALL virtualbox
 INSTALL moreutils
 INSTALL git
 INSTALL git-extras
@@ -61,7 +60,6 @@ INSTALL vagrant
 INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL ubuntu-gnome-desktop
-INSTALL virtualbox-guest-dkms
 INSTALL ioping
 INSTALL sysstat
 INSTALL fdupes
@@ -190,6 +188,13 @@ IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
 	RUN ssh-keygen
 	# Note that the response to 'already exists' below prevents overwrite here.
 	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
+ENDIF
+
+
+# Virtualbox except on basquiat
+IF_NOT RUN hostname | grep basquiat
+	INSTALL virtualbox
+	INSTALL virtualbox-guest-dkms
 ENDIF
 
 # Apache
