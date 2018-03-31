@@ -136,9 +136,17 @@ IF_NOT RUN apt-cache policy | grep microsoft
 	INSTALL powershell
 ENDIF
 
+# grub-customizer
 IF_NOT RUN apt-cache policy | grep grub-customizer
 	RUN add-apt-repository ppa:danielrichter2007/grub-customizer
-	RUN apt install -y grub-customizer
+	INSTALL grub-customizer
+ENDIF
+
+# tmate.io
+IF_NOT RUN apt-cache policy | grep tmate
+	RUN add-apt-repository -y ppa:tmate.io/archive
+	RUN apt-get update -y 
+	INSTALL tmate
 ENDIF
 
 # Google Chrome
@@ -146,7 +154,7 @@ IF_NOT RUN google-chrome --version
 	RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 	RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
 	RUN apt update -y
-	RUN apt install -y google-chrome-stable
+	INSTALL google-chrome-stable
 ENDIF
 
 # Install docker
