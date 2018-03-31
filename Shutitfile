@@ -138,7 +138,7 @@ ENDIF
 
 # grub-customizer
 IF_NOT RUN apt-cache policy | grep grub-customizer
-	RUN add-apt-repository ppa:danielrichter2007/grub-customizer
+	RUN add-apt-repository -y ppa:danielrichter2007/grub-customizer
 	INSTALL grub-customizer
 ENDIF
 
@@ -160,7 +160,7 @@ ENDIF
 # Install docker
 IF_NOT RUN docker version
 	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-	RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+	RUN add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 	RUN apt update
 	RUN apt install -y docker-ce
 	# Add imiell to the docker user group
