@@ -64,13 +64,12 @@ INSTALL ioping
 INSTALL sysstat
 INSTALL fdupes
 INSTALL html2text
-INSTALL ntp
 INSTALL software-properties-common
 INSTALL curl
 INSTALL apt-transport-https
 INSTALL ca-certificates
 INSTALL ruby-dev
-RUN timedatectl set-ntp on
+INSTALL qemu
 # For authoring
 INSTALL pandoc
 # For sec standards
@@ -93,6 +92,9 @@ INSTALL links
 INSTALL tasksel
 INSTALL php
 INSTALL libapache2-mod-php
+# NTP
+INSTALL ntp
+RUN timedatectl set-ntp on
 
 
 # ShutIt should be installed already, naturally
