@@ -257,6 +257,16 @@ IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
 	RUN systemctl daemon-reload &&  systemctl restart upower.service
 ENDIF
 
+# https://askubuntu.com/questions/907246/how-to-disable-systemd-resolved-in-ubuntu
+IF RUN ls /tmp/systemdresolvedDONOTDELETE
+	RUN systemctl disable systemd-resolved.service
+	RUN service systemd-resolved stop
+	RUN echo 'dns=default' >> /etc/NetworkManager/NetworkManager.conf 
+	RUN rm /etc/resolv.conf
+	RUN service network-manager restart
+	RUN touch /tmp/systemdresolvedDONOTDELETE
+ENDIF
+
 # Takes effect on next reboot
 # https://unix.stackexchange.com/questions/269661/how-to-turn-off-wireless-power-management-permanently
 RUN sed -i 's/wifi.powersave.*/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
