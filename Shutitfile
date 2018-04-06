@@ -161,10 +161,7 @@ ENDIF
 
 # Install docker
 IF_NOT RUN docker version
-	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-	RUN add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-	RUN apt update
-	RUN apt install -y docker-ce
+	INSTALL docker.io
 	# Add imiell to the docker user group
 	RUN usermod -G docker -a imiell
 	RUN usermod -G staff -a imiell
