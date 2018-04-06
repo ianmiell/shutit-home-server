@@ -56,7 +56,30 @@ INSTALL apt-file
 INSTALL shellcheck
 INSTALL sqlite3
 INSTALL golang-go
+# VIRTUALIZATION BEGIN
+# Virtualbox except on basquiat
+INSTALL ruby-dev
+# Get rid of fog-core, which causes dep issues.
+RUN apt-get remove -y --auto-remove ruby-fog-core
+RUN apt purge -y ruby-nokogiri
+IF_NOT RUN hostname | grep basquiat
+	INSTALL virtualbox
+	INSTALL virtualbox-guest-dkms
+ENDIF
+# Vagrant BEGIN
 INSTALL vagrant
+# Landrush plugin reqs BEGIN
+INSTALL zlib1g-dev
+INSTALL libvirt-dev
+IF_NOT RUN vagrant plugin list | grep vagrant-libvirt
+	RUN vagrant plugin install vagrant-libvirt
+ENDIF
+IF_NOT RUN vagrant plugin list | grep landrush
+	RUN vagrant plugin install landrush
+ENDIF
+# Vagrant BEGIN
+# Landrush plugin reqs DONE
+# VIRTUALIZATION END
 INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL ubuntu-gnome-desktop
@@ -68,7 +91,6 @@ INSTALL software-properties-common
 INSTALL curl
 INSTALL apt-transport-https
 INSTALL ca-certificates
-INSTALL ruby-dev
 INSTALL qemu
 # For authoring
 INSTALL pandoc
@@ -198,11 +220,6 @@ IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
 ENDIF
 
 
-# Virtualbox except on basquiat
-IF_NOT RUN hostname | grep basquiat
-	INSTALL virtualbox
-	INSTALL virtualbox-guest-dkms
-ENDIF
 
 # Apache
 RUN a2enmod proxy
