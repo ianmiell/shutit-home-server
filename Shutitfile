@@ -5,6 +5,16 @@ ASSERT_OUTPUT root
 
 LOG DEBUG
 
+
+IF FILE_EXISTS /space/git/work
+	RUN cd /space/git/work
+	RUN git pull
+	SCRIPT_BEGIN
+touch /tmp/asdasdasd
+
+	SCRIPT_END
+ENDIF
+
 # Check this is Ubuntu
 SEND lsb_release -d -s | awk '{print $1}'
 ASSERT_OUTPUT Ubuntu
@@ -56,7 +66,30 @@ INSTALL apt-file
 INSTALL shellcheck
 INSTALL sqlite3
 INSTALL golang-go
+# VIRTUALIZATION BEGIN
+# Virtualbox except on basquiat
+INSTALL ruby-dev
+# Get rid of fog-core, which causes dep issues.
+RUN apt-get remove -y --auto-remove ruby-fog-core
+RUN apt purge -y ruby-nokogiri
+IF_NOT RUN hostname | grep basquiat
+	INSTALL virtualbox
+	INSTALL virtualbox-guest-dkms
+ENDIF
+# Vagrant BEGIN
 INSTALL vagrant
+# Landrush plugin reqs BEGIN
+INSTALL zlib1g-dev
+INSTALL libvirt-dev
+IF_NOT RUN vagrant plugin list | grep vagrant-libvirt
+	RUN vagrant plugin install vagrant-libvirt
+ENDIF
+IF_NOT RUN vagrant plugin list | grep landrush
+	RUN vagrant plugin install landrush
+ENDIF
+# Vagrant BEGIN
+# Landrush plugin reqs DONE
+# VIRTUALIZATION END
 INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL ubuntu-gnome-desktop
@@ -68,7 +101,6 @@ INSTALL software-properties-common
 INSTALL curl
 INSTALL apt-transport-https
 INSTALL ca-certificates
-INSTALL ruby-dev
 INSTALL qemu
 # For authoring
 INSTALL pandoc
@@ -161,10 +193,7 @@ ENDIF
 
 # Install docker
 IF_NOT RUN docker version
-	RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-	RUN add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-	RUN apt update
-	RUN apt install -y docker-ce
+	INSTALL docker.io
 	# Add imiell to the docker user group
 	RUN usermod -G docker -a imiell
 	RUN usermod -G staff -a imiell
@@ -201,11 +230,6 @@ IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
 ENDIF
 
 
-# Virtualbox except on basquiat
-IF_NOT RUN hostname | grep basquiat
-	INSTALL virtualbox
-	INSTALL virtualbox-guest-dkms
-ENDIF
 
 # Apache
 RUN a2enmod proxy
@@ -277,13 +301,11 @@ IF_NOT RUN grep SUSPEND_METHODS="none" /etc/default/acpi-support
 	RUN /etc/init.d/acpid restart
 ENDIF
 
-#IF_NOT RUN chef
-#	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
-#	RUN apt install chefdk_2.3.4-1_amd64.deb
-#	RUN gem install rake
-#	RUN gem install rubocop
-#	RUN gem install cookstyle
-#ENDIF
+IF_NOT RUN chef
+	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
+	RUN apt install chefdk_2.3.4-1_amd64.deb
+	RUN gem install kitchen
+ENDIF
 
 RUN apt -y upgrade
 
@@ -348,9 +370,11 @@ ENDIF
 
 LOGOUT
 
-
-
 RUN chown -R imiell: /space
+
+
+# Pull my dev tools image from Dockerhub - TOO BIG
+#RUN docker pull imiell/docker-dev-tools-image
 
 # TODO: add these lines to /etc/sysctl.d/99-sysctl.conf and run sysctl -p
 #net.ipv4.icmp_ratelimit = 100
@@ -412,6 +436,4 @@ RUN inspec exec . || true
 # * utils alfresco/utils
 # * WannaCry Exploit Mitigation adamleff/wannacry-exploit
 
-
-# Pull my dev tools image from Dockerhub
-#RUN docker pull imiell/docker-dev-tools-image
+LOG Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
