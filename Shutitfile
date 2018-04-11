@@ -60,30 +60,6 @@ INSTALL apt-file
 INSTALL shellcheck
 INSTALL sqlite3
 INSTALL golang-go
-# VIRTUALIZATION BEGIN
-# Virtualbox except on basquiat
-INSTALL ruby-dev
-# Get rid of fog-core, which causes dep issues.
-RUN apt-get remove -y --auto-remove ruby-fog-core
-RUN apt purge -y ruby-nokogiri
-IF_NOT RUN hostname | grep basquiat
-	INSTALL virtualbox
-	INSTALL virtualbox-guest-dkms
-ENDIF
-# Vagrant BEGIN
-INSTALL vagrant
-# Landrush plugin reqs BEGIN
-INSTALL zlib1g-dev
-INSTALL libvirt-dev
-IF_NOT RUN vagrant plugin list | grep vagrant-libvirt
-	RUN vagrant plugin install vagrant-libvirt
-ENDIF
-IF_NOT RUN vagrant plugin list | grep landrush
-	RUN vagrant plugin install landrush
-ENDIF
-# Vagrant BEGIN
-# Landrush plugin reqs DONE
-# VIRTUALIZATION END
 INSTALL gnuplot
 INSTALL ubuntu-desktop
 INSTALL ubuntu-gnome-desktop
@@ -96,7 +72,6 @@ INSTALL curl
 INSTALL apt-transport-https
 INSTALL ca-certificates
 INSTALL qemu
-# For authoring
 INSTALL pandoc
 # For sec standards
 INSTALL auditd
@@ -118,18 +93,36 @@ INSTALL links
 INSTALL tasksel
 INSTALL php
 INSTALL libapache2-mod-php
+# VIRTUALIZATION BEGIN
+# Virtualbox except on basquiat
+INSTALL ruby-dev
+# Get rid of fog-core, which causes dep issues.
+RUN apt-get remove -y --auto-remove ruby-fog-core
+RUN apt purge -y ruby-nokogiri
+# Vagrant BEGIN
+# basquiat does not need VB
+IF_NOT RUN hostname | grep basquiat
+	INSTALL virtualbox
+	INSTALL virtualbox-guest-dkms
+	INSTALL vagrant
+	# Landrush plugin reqs BEGIN
+	INSTALL zlib1g-dev
+	INSTALL libvirt-dev
+	# Landrush plugin reqs DONE
+	IF_NOT RUN vagrant plugin list | grep vagrant-libvirt
+		RUN vagrant plugin install vagrant-libvirt
+	ENDIF
+	IF_NOT RUN vagrant plugin list | grep landrush
+		RUN vagrant plugin install landrush
+	ENDIF
+ENDIF
+# Vagrant BEGIN
+# VIRTUALIZATION END
+# For authoring
 # NTP
 INSTALL ntp
 RUN timedatectl set-ntp on
 
-
-# ShutIt should be installed already, naturally
-#RUN pip install shutit
-RUN pip install -U requests
-RUN pip install -U coverage
-RUN pip install -U python-twitter
-RUN pip install -U setuptools
-RUN pip install -U twine
 
 # Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
 IF_NOT RUN apt-cache policy | grep certbot
@@ -144,14 +137,6 @@ ENDIF
 #	RUN apt -y update || true
 #	RUN apt -y install handbrake-cli || true
 #ENDIF
-
-# Handbrake
-IF_NOT RUN bccmd -h
-	RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D4284CDD
-	RUN echo "deb https://repo.iovisor.org/apt/xenial xenial main" | tee /etc/apt/sources.list.d/iovisor.list
-	RUN apt update -y
-	RUN apt install -y bcc-tools libbcc-examples linux-headers-$(uname -r)
-ENDIF
 
 # Powershell
 IF_NOT RUN apt-cache policy | grep microsoft
@@ -184,6 +169,16 @@ IF_NOT RUN google-chrome --version
 	RUN apt update -y
 	INSTALL google-chrome-stable
 ENDIF
+
+# ShutIt should be installed already, naturally
+# pip upgrade
+RUN pip install --upgrade pip
+#RUN pip install shutit
+RUN pip install -U requests
+RUN pip install -U coverage
+RUN pip install -U python-twitter
+RUN pip install -U setuptools
+RUN pip install -U twine
 
 # Install docker
 IF_NOT RUN docker version
@@ -223,8 +218,6 @@ IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
 	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
 ENDIF
 
-
-
 # Apache
 RUN a2enmod proxy
 RUN a2enmod proxy_http
@@ -237,17 +230,15 @@ RUN a2enmod proxy_connect
 RUN a2enmod proxy_html
 RUN a2enmod php7.2
 
-# Vagrant 1.8.6 required
-#IF_NOT RUN vagrant version
-#	RUN wget https://releases.hashicorp.com/vagrant/1.8.6/vagrant_1.8.6_x86_64.deb
-#	RUN dpkg -i vagrant_1.8.6_x86_64.deb
-#	RUN rm vagrant_1.8.6_x86_64.deb
-#ENDIF
-
 # Terraform
-RUN wget https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip && unzip terraform_0.11.3_linux_amd64.zip && mv terraform /usr/local/bin && rm -f terraform*
+IF_NOT RUN terraform version  | awk '{print $NF}' | head -1 | grep v0.11.3
+	RUN wget https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip
+	RUN unzip terraform_0.11.3_linux_amd64.zip
+	RUN mv terraform /usr/local/bin
+	RUN rm -f terraform*
+ENDIF
 
-# Jenkins
+# Jenkins setup
 RUN mkdir -p /var/jenkins
 RUN chown imiell: /var/jenkins
 
@@ -256,7 +247,11 @@ RUN chown imiell: /var/jenkins
 RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
 
 #REPLACE_LINE ['filename=/tmp/test2','line=asd','pattern=asd']
+
+# Nexus needs to up limits.conf
 ENSURE_LINE ['filename=/etc/security/limits.conf','line=nexus - nofile 65536','pattern=nexus - nofile.*']
+
+# Power/nosleep management
 IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
 	RUN sed -i 's/HandleLidSwitch.*/HandleLidSwitch=ignore' /etc/systemd/logind.conf || true
 	RUN systemctl daemon-reload && systemctl restart systemd-logind.service
@@ -274,17 +269,6 @@ IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
 	RUN echo IgnoreLid=true >> /etc/UPower/UPower.conf
 	RUN systemctl daemon-reload &&  systemctl restart upower.service
 ENDIF
-
-# https://askubuntu.com/questions/907246/how-to-disable-systemd-resolved-in-ubuntu
-IF RUN ls /tmp/systemdresolvedDONOTDELETE
-	RUN systemctl disable systemd-resolved.service
-	RUN service systemd-resolved stop
-	RUN echo 'dns=default' >> /etc/NetworkManager/NetworkManager.conf 
-	RUN rm /etc/resolv.conf
-	RUN service network-manager restart
-	RUN touch /tmp/systemdresolvedDONOTDELETE
-ENDIF
-
 # Takes effect on next reboot
 # https://unix.stackexchange.com/questions/269661/how-to-turn-off-wireless-power-management-permanently
 RUN sed -i 's/wifi.powersave.*/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
@@ -295,21 +279,19 @@ IF_NOT RUN grep SUSPEND_METHODS="none" /etc/default/acpi-support
 	RUN /etc/init.d/acpid restart
 ENDIF
 
-IF_NOT RUN chef
+IF_NOT RUN command chef
 	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
 	RUN apt install chefdk_2.3.4-1_amd64.deb
 	RUN gem install kitchen
 ENDIF
 
+# apt upgrade
 RUN apt -y upgrade
 
 # apt cleanup
 RUN apt-file update
 RUN apt autoremove -y
 RUN apt clean
-
-# pip upgrade
-RUN pip install --upgrade pip
 
 # Sysstat
 RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
@@ -322,6 +304,7 @@ IF_NOT RUN grep -- '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
 	RUN echo '-a exit,always -F arch=b32 -S execve' >> /etc/audit/audit.rules
 ENDIF
 
+################################################################################
 # Log me in as imiell
 USER imiell
 # If it's not been done before, check out my dotfiles and set it up
@@ -333,72 +316,20 @@ IF_NOT FILE_EXISTS /home/imiell/.dotfiles
 	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite all=O']
 ENDIF
 
-# Git repos
-RUN cd /space/git
-
-# jid jq explorer
-# TODO install go
-#RUN go get -u github.com/simeji/jid/cmd/jid
-
-# Asciidoc for user imiell also?
-#RUN gem install --pre asciidoctor-pdf
-#RUN gem install coderay pygments.rb tilt slim
-
-
-## All mine - takes too long!
-#RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=1' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
-#RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=2' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
-#RUN wget -qO- 'https://api.github.com/users/ianmiell/repos?per_page=100&page=3' | grep full_name  | awk '{print $2}' | sed 's/^.\(.*\)",/git clone --recursive https:\/\/github.com\/\1/' | sh
-
-# tmux plugin manager
-IF_NOT FILE_EXISTS /home/imiell/.tmux/plugins/tpm
-	RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-ENDIF
-
 # Generate an ssh key
 IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
 	RUN ssh-keygen
 	# Note that the response to 'already exists' below prevents overwrite here.
 	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
 ENDIF
-
+# Log imiell out
+# ensure vim is the default for imiell
+RUN echo 3 | update-alternatives --config editor
 LOGOUT
-
+# ensure vim is the default for root
+RUN echo 3 | update-alternatives --config editor
 RUN chown -R imiell: /space
-
-
-# Pull my dev tools image from Dockerhub - TOO BIG
-#RUN docker pull imiell/docker-dev-tools-image
-
-# TODO: add these lines to /etc/sysctl.d/99-sysctl.conf and run sysctl -p
-#net.ipv4.icmp_ratelimit = 100
-#net.ipv4.icmp_ratemask = 88089
-#net.ipv4.tcp_timestamps = 0
-#net.ipv4.conf.all.arp_ignore = 1
-#net.ipv4.conf.all.arp_announce = 2
-#net.ipv4.tcp_rfc1337 = 1
-#net.ipv4.conf.default.accept_source_route = 0
-#net.ipv4.conf.default.accept_redirects = 0
-#net.ipv4.conf.all.secure_redirects = 0
-#net.ipv4.conf.default.send_redirects = 1
-#net.ipv4.conf.all.log_martians = 1
-#net.ipv4.conf.default.log_martians = 1
-#net.ipv6.conf.all.disable_ipv6 = 1
-#net.ipv4.conf.default.secure_redirects = 0
-#net.ipv4.conf.default.send_redirects = 0
-#net.ipv6.conf.default.accept_redirects = 0
-#net.ipv6.conf.default.router_solicitations = 0
-#net.ipv6.conf.default.accept_ra_rtr_pref = 0
-#net.ipv4.conf.all.send_redirects = 0
-#net.ipv6.conf.all.accept_redirects = 0
-#net.ipv6.conf.default.accept_ra_pinfo = 0
-#net.ipv6.conf.default.accept_ra_defrtr = 0
-#net.ipv6.conf.all.accept_ra = 0
-#net.ipv6.conf.default.autoconf = 0
-#net.ipv6.conf.default.dad_transmits = 0
-#net.ipv6.conf.default.accept_ra = 0
-#net.ipv6.conf.default.max_addresses = 1
-#kernel.sysrq = 0
+################################################################################
 
 IF_NOT RUN npm -g ll mermaid
 	RUN npm install -g mermaid > /dev/null 2>&1
@@ -406,9 +337,6 @@ ENDIF
 IF_NOT RUN which gtop
 	RUN npm install -g gtop > /dev/null 2>&1
 ENDIF
-
-# ensure vi is the default
-RUN echo 3 | update-alternatives --config editor
 
 # CRON SETUP
 IF FILE_EXISTS /space/git/work
@@ -422,25 +350,5 @@ cp /space/git/work/bin/crontab_$(hostname -s)_imiell /etc/cron.d/
 chown imiell: /space/git/work/bin/crontab_$(hostname -s)_imiell
 	SCRIPT_END
 ENDIF
-
-
-## INSPECS
-#RUN cd /space/git
-#IF_NOT FILE_EXISTS /space/git/inspec-profiles
-#	RUN git clone https://github.com/ianmiell/inspec-profiles
-#ENDIF
-#RUN cd inspec-profiles/dev-sec-wrapper
-#RUN inspec exec . || true
-## * CIS Docker Benchmark dev-sec/cis-docker-benchmark
-## * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
-## * DevSec MySQl Baseline dev-sec/mysql-baseline
-## * DevSec Nginx Baseline dev-sec/nginx-baseline
-## * inspec_java awim/inspec_java
-## * InSpec Wrapper Profile Example adamleff/inspec-wrapper-profile-example
-## * profile-test bigbam505/profile-test
-## * SSL Certificate - InSpec Profile alexpop/ssl-certificate-profile
-## * /tmp Compliance Profile nathenharvey/tmp-compliance-profile
-## * utils alfresco/utils
-## * WannaCry Exploit Mitigation adamleff/wannacry-exploit
 
 RUN echo Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
