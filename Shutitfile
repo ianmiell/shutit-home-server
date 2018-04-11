@@ -1,5 +1,9 @@
 # We assert here that we are running as root
 
+IF_NOT RUN false
+	RUN touch amnas
+ENDIF
+
 SEND whoami
 ASSERT_OUTPUT root
 
@@ -420,23 +424,23 @@ chown imiell: /space/git/work/bin/crontab_$(hostname -s)_imiell
 ENDIF
 
 
-# INSPECS
-RUN cd /space/git
-IF_NOT FILE_EXISTS /space/git/inspec-profiles
-	RUN git clone https://github.com/ianmiell/inspec-profiles
-ENDIF
-RUN cd inspec-profiles/dev-sec-wrapper
-RUN inspec exec . || true
-# * CIS Docker Benchmark dev-sec/cis-docker-benchmark
-# * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
-# * DevSec MySQl Baseline dev-sec/mysql-baseline
-# * DevSec Nginx Baseline dev-sec/nginx-baseline
-# * inspec_java awim/inspec_java
-# * InSpec Wrapper Profile Example adamleff/inspec-wrapper-profile-example
-# * profile-test bigbam505/profile-test
-# * SSL Certificate - InSpec Profile alexpop/ssl-certificate-profile
-# * /tmp Compliance Profile nathenharvey/tmp-compliance-profile
-# * utils alfresco/utils
-# * WannaCry Exploit Mitigation adamleff/wannacry-exploit
+## INSPECS
+#RUN cd /space/git
+#IF_NOT FILE_EXISTS /space/git/inspec-profiles
+#	RUN git clone https://github.com/ianmiell/inspec-profiles
+#ENDIF
+#RUN cd inspec-profiles/dev-sec-wrapper
+#RUN inspec exec . || true
+## * CIS Docker Benchmark dev-sec/cis-docker-benchmark
+## * CIS Kubernetes Benchmark dev-sec/cis-kubernetes-benchmark
+## * DevSec MySQl Baseline dev-sec/mysql-baseline
+## * DevSec Nginx Baseline dev-sec/nginx-baseline
+## * inspec_java awim/inspec_java
+## * InSpec Wrapper Profile Example adamleff/inspec-wrapper-profile-example
+## * profile-test bigbam505/profile-test
+## * SSL Certificate - InSpec Profile alexpop/ssl-certificate-profile
+## * /tmp Compliance Profile nathenharvey/tmp-compliance-profile
+## * utils alfresco/utils
+## * WannaCry Exploit Mitigation adamleff/wannacry-exploit
 
 RUN echo Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
