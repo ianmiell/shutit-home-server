@@ -5,6 +5,16 @@ ASSERT_OUTPUT root
 
 LOG DEBUG
 
+
+IF FILE_EXISTS /space/git/work
+	RUN cd /space/git/work
+	RUN git pull
+	SCRIPT_BEGIN
+touch /tmp/asdasdasd
+
+	SCRIPT_END
+ENDIF
+
 # Check this is Ubuntu
 SEND lsb_release -d -s | awk '{print $1}'
 ASSERT_OUTPUT Ubuntu
@@ -350,9 +360,11 @@ ENDIF
 
 LOGOUT
 
-
-
 RUN chown -R imiell: /space
+
+
+# Pull my dev tools image from Dockerhub - TOO BIG
+#RUN docker pull imiell/docker-dev-tools-image
 
 # TODO: add these lines to /etc/sysctl.d/99-sysctl.conf and run sysctl -p
 #net.ipv4.icmp_ratelimit = 100
@@ -414,6 +426,4 @@ RUN inspec exec . || true
 # * utils alfresco/utils
 # * WannaCry Exploit Mitigation adamleff/wannacry-exploit
 
-
-# Pull my dev tools image from Dockerhub
-#RUN docker pull imiell/docker-dev-tools-image
+LOG Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
