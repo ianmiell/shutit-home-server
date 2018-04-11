@@ -5,16 +5,6 @@ ASSERT_OUTPUT root
 
 LOG DEBUG
 
-
-IF FILE_EXISTS /space/git/work
-	RUN cd /space/git/work
-	RUN git pull
-	SCRIPT_BEGIN
-touch /tmp/asdasdasd
-
-	SCRIPT_END
-ENDIF
-
 # Check this is Ubuntu
 SEND lsb_release -d -s | awk '{print $1}'
 ASSERT_OUTPUT Ubuntu
@@ -416,6 +406,19 @@ ENDIF
 # ensure vi is the default
 RUN echo 3 | update-alternatives --config editor
 
+# CRON SETUP
+IF FILE_EXISTS /space/git/work
+	RUN cd /space/git/work
+	SCRIPT_BEGIN
+touch /space/git/work/bin/crontab_$(hostname -s)_root
+touch /space/git/work/bin/crontab_$(hostname -s)_imiell
+cp /space/git/work/bin/crontab_$(hostname -s)_root /etc/cron.d/
+chown root: /space/git/work/bin/crontab_$(hostname -s)_root
+cp /space/git/work/bin/crontab_$(hostname -s)_imiell /etc/cron.d/
+chown imiell: /space/git/work/bin/crontab_$(hostname -s)_imiell
+	SCRIPT_END
+ENDIF
+
 
 # INSPECS
 RUN cd /space/git
@@ -436,4 +439,4 @@ RUN inspec exec . || true
 # * utils alfresco/utils
 # * WannaCry Exploit Mitigation adamleff/wannacry-exploit
 
-LOG Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
+RUN echo Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
