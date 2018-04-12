@@ -2,7 +2,6 @@
 
 
 try {
-  properties([parameters([])])
   stage('basquiat') {
     node('basquiat') {
       sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
