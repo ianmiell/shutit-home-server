@@ -48,7 +48,6 @@ INSTALL moreutils
 INSTALL git
 INSTALL git-extras
 INSTALL npm
-INSTALL nodejs-legacy
 INSTALL asciidoc
 INSTALL asciidoctor
 INSTALL awscli
