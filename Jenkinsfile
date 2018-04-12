@@ -5,10 +5,10 @@ try {
     string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
   ])])
   stage('welles') {
-    def nodetest() { 
-      sh('echo alive on $(hostname)') 
-    } 
     node('welles') {
+      def nodetest() { 
+        sh('echo alive on $(hostname)') 
+      } 
       try { 
         timeout(time: 5, unit: 'SECONDS') {
           nodetest()
