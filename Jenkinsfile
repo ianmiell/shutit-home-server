@@ -4,22 +4,25 @@ try {
     properties([parameters([
     string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
   ])])
-  def nodetest() { 
-    sh('echo alive on $(hostname)') 
-  } 
-  stage('basquiat') {
-    node('basquiat') {
+  stage('welles') {
+    def nodetest() { 
+      sh('echo alive on $(hostname)') 
+    } 
+    node('welles') {
       try { 
         timeout(time: 5, unit: 'SECONDS') {
           nodetest()
         }
         sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
       } catch(err) {
-        echo 'Skipping basquiat as apparently unavailable'
+        echo 'Skipping welles as apparently unavailable'
       }
     }
   }
   stage('cage') {
+    def nodetest() { 
+      sh('echo alive on $(hostname)') 
+    } 
     node('cage') {
       try { 
         timeout(time: 5, unit: 'SECONDS') {
@@ -32,6 +35,9 @@ try {
     }
   }
   stage('dali') {
+    def nodetest() { 
+      sh('echo alive on $(hostname)') 
+    } 
     node('dali') {
       try { 
         timeout(time: 5, unit: 'SECONDS') {
@@ -43,15 +49,18 @@ try {
       }
     }
   }
-  stage('welles') {
-    node('welles') {
+  stage('basquiat') {
+    def nodetest() { 
+      sh('echo alive on $(hostname)') 
+    } 
+    node('basquiat') {
       try { 
         timeout(time: 5, unit: 'SECONDS') {
           nodetest()
         }
         sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
       } catch(err) {
-        echo 'Skipping welles as apparently unavailable'
+        echo 'Skipping basquiat as apparently unavailable'
       }
     }
   }
