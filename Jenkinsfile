@@ -1,7 +1,9 @@
 #!groovy
 
-
 try {
+    properties([parameters([
+    string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
+  ])])
   stage('basquiat') {
     node('basquiat') {
       sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
