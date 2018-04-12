@@ -200,8 +200,12 @@ ENDIF
 RUN mkdir -p /media/storage_{1,2}
 
 # Create space folder and chown it to imiell
-RUN mkdir -p /space && chown imiell: /space
+RUN mkdir -p /space
 RUN mkdir -p /space/git
+RUN chown imiell: /space
+RUN chown imiell: /space/git
+RUN mkdir -p /space/jenkins_cache
+RUN chown root: /space/jenkins_cache
 
 # for inspec tests
 IF_NOT RUN inspec version
