@@ -210,7 +210,7 @@ IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
 	RUN cd /space/jenkins_cache
 	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
 	RUN cd -
-END
+ENDIF
 
 # for inspec tests
 IF_NOT RUN inspec version
