@@ -347,13 +347,16 @@ ENDIF
 # CRON SETUP
 IF FILE_EXISTS /space/git/work
 	RUN cd /space/git/work
+	RUN git pull
 	SCRIPT_BEGIN
 touch /space/git/work/bin/crontab_$(hostname -s)_root
 touch /space/git/work/bin/crontab_$(hostname -s)_imiell
 cp /space/git/work/bin/crontab_$(hostname -s)_root /etc/cron.d/
-chown root: /space/git/work/bin/crontab_$(hostname -s)_root
+cp /space/git/work/bin/crontab_all_root /etc/cron.d/
+chown root: /space/git/work/bin/crontab_*_root
 cp /space/git/work/bin/crontab_$(hostname -s)_imiell /etc/cron.d/
-chown imiell: /space/git/work/bin/crontab_$(hostname -s)_imiell
+cp /space/git/work/bin/crontab_all_imiell /etc/cron.d/
+chown imiell: /space/git/work/bin/crontab_*_imiell
 	SCRIPT_END
 ENDIF
 
