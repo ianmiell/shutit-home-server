@@ -344,8 +344,10 @@ ENDIF
 
 # CRON SETUP
 IF FILE_EXISTS /space/git/work
+	USER imiell
 	RUN cd /space/git/work
 	RUN git pull
+	LOGOUT imiell
 	SCRIPT_BEGIN
 touch /space/git/work/bin/crontab_$(hostname -s)_root
 touch /space/git/work/bin/crontab_$(hostname -s)_imiell
