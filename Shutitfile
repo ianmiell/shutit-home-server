@@ -109,9 +109,6 @@ IF_NOT RUN hostname | grep basquiat
 	INSTALL zlib1g-dev
 	INSTALL libvirt-dev
 	# Landrush plugin reqs DONE
-	IF_NOT RUN vagrant plugin list | grep vagrant-libvirt
-		RUN vagrant plugin install vagrant-libvirt
-	ENDIF
 	IF_NOT RUN vagrant plugin list | grep landrush
 		RUN vagrant plugin install landrush
 	ENDIF
@@ -155,12 +152,12 @@ IF_NOT RUN apt-cache policy | grep grub-customizer
 	INSTALL grub-customizer
 ENDIF
 
-# tmate.io
-IF_NOT RUN apt-cache policy | grep tmate
-	RUN add-apt-repository -y ppa:tmate.io/archive
-	RUN apt-get update -y 
-	INSTALL tmate
-ENDIF
+## tmate.io
+#IF_NOT RUN apt-cache policy | grep tmate
+#	RUN add-apt-repository -y ppa:tmate.io/archive
+#	RUN apt-get update -y 
+#	INSTALL tmate
+#ENDIF
 
 # Google Chrome
 IF_NOT RUN google-chrome --version
