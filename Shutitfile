@@ -199,15 +199,8 @@ RUN mkdir -p /media/storage_{1,2}
 # Create space folder and chown it to imiell
 RUN mkdir -p /space
 RUN mkdir -p /space/git
-RUN chown imiell: /space
-RUN chown imiell: /space/git
 RUN mkdir -p /space/jenkins_cache
-RUN chown root: /space/jenkins_cache
-IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
-	RUN cd /space/jenkins_cache
-	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
-	RUN cd -
-ENDIF
+RUN chown -R imiell: /space
 
 # for inspec tests
 IF_NOT RUN inspec version
@@ -331,6 +324,11 @@ ENDIF
 # Log imiell out
 # ensure vim is the default for imiell
 RUN echo 3 | update-alternatives --config editor
+IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
+	RUN cd /space/jenkins_cache
+	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
+	RUN cd -
+ENDIF
 LOGOUT
 # ensure vim is the default for root
 RUN echo 3 | update-alternatives --config editor
