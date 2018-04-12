@@ -97,8 +97,8 @@ INSTALL libapache2-mod-php
 # Virtualbox except on basquiat
 INSTALL ruby-dev
 # Get rid of fog-core, which causes dep issues.
-RUN apt-get remove -y --auto-remove ruby-fog-core
-RUN apt purge -y ruby-nokogiri
+RUN apt-get remove -y --auto-remove ruby-fog-core || true
+RUN apt purge -y ruby-nokogiri || true
 # Vagrant BEGIN
 # basquiat does not need VB
 IF_NOT RUN hostname | grep basquiat
