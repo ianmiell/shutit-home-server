@@ -206,6 +206,11 @@ RUN chown imiell: /space
 RUN chown imiell: /space/git
 RUN mkdir -p /space/jenkins_cache
 RUN chown root: /space/jenkins_cache
+IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
+	RUN cd /space/jenkins_cache
+	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
+	RUN cd -
+END
 
 # for inspec tests
 IF_NOT RUN inspec version
