@@ -1,17 +1,14 @@
 #!groovy
 
 try {
-    properties([parameters([
+  properties([parameters([
     string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
   ])])
   stage('welles') {
     node('welles') {
-      def nodetest() { 
-        sh('echo alive on $(hostname)') 
-      } 
       try { 
         timeout(time: 5, unit: 'SECONDS') {
-          nodetest()
+          sh('echo alive on $(hostname)') 
         }
         sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
       } catch(err) {
@@ -20,13 +17,10 @@ try {
     }
   }
   stage('cage') {
-    def nodetest() { 
-      sh('echo alive on $(hostname)') 
-    } 
     node('cage') {
       try { 
         timeout(time: 5, unit: 'SECONDS') {
-          nodetest()
+          sh('echo alive on $(hostname)') 
         }
         sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
       } catch(err) {
@@ -35,13 +29,10 @@ try {
     }
   }
   stage('dali') {
-    def nodetest() { 
-      sh('echo alive on $(hostname)') 
-    } 
     node('dali') {
       try { 
         timeout(time: 5, unit: 'SECONDS') {
-          nodetest()
+          sh('echo alive on $(hostname)') 
         }
         sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
       } catch(err) {
@@ -50,13 +41,10 @@ try {
     }
   }
   stage('basquiat') {
-    def nodetest() { 
-      sh('echo alive on $(hostname)') 
-    } 
     node('basquiat') {
       try { 
         timeout(time: 5, unit: 'SECONDS') {
-          nodetest()
+          sh('echo alive on $(hostname)') 
         }
         sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
       } catch(err) {
