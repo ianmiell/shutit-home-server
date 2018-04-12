@@ -4,24 +4,55 @@ try {
     properties([parameters([
     string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
   ])])
+  def nodetest() { 
+    sh('echo alive on $(hostname)') 
+  } 
   stage('basquiat') {
     node('basquiat') {
-      sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      try { 
+        timeout(time: 5, unit: 'SECONDS') {
+          nodetest()
+        }
+        sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      } catch(err) {
+        echo 'Skipping basquiat as apparently unavailable'
+      }
     }
   }
   stage('cage') {
     node('cage') {
-      sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      try { 
+        timeout(time: 5, unit: 'SECONDS') {
+          nodetest()
+        }
+        sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      } catch(err) {
+        echo 'Skipping cage as apparently unavailable'
+      }
     }
   }
   stage('dali') {
     node('dali') {
-      sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      try { 
+        timeout(time: 5, unit: 'SECONDS') {
+          nodetest()
+        }
+        sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      } catch(err) {
+        echo 'Skipping dali as apparently unavailable'
+      }
     }
   }
   stage('welles') {
     node('welles') {
-      sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      try { 
+        timeout(time: 5, unit: 'SECONDS') {
+          nodetest()
+        }
+        sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      } catch(err) {
+        echo 'Skipping welles as apparently unavailable'
+      }
     }
   }
 } catch(err) {
