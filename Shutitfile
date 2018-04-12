@@ -278,8 +278,8 @@ IF_NOT RUN grep SUSPEND_METHODS="none" /etc/default/acpi-support
 ENDIF
 
 IF_NOT RUN command chef
-	RUN wget https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb
-	RUN apt install chefdk_2.3.4-1_amd64.deb
+	RUN wget -qO- https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb > chefdk.deb
+	RUN apt install chefdk.deb
 	RUN gem install kitchen
 ENDIF
 
