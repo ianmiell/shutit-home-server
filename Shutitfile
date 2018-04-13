@@ -175,6 +175,7 @@ RUN pip install -U coverage
 RUN pip install -U python-twitter
 RUN pip install -U setuptools
 RUN pip install -U twine
+RUN pip install -U butterfly
 
 # Install docker
 IF_NOT RUN docker version
