@@ -281,6 +281,7 @@ IF_NOT RUN command chef
 	RUN wget -qO- https://packages.chef.io/files/stable/chefdk/2.3.4/ubuntu/16.04/chefdk_2.3.4-1_amd64.deb > chefdk.deb
 	RUN dpkg -i -y chefdk.deb
 	RUN gem install kitchen
+	RUN rm -f chefdk.deb
 ENDIF
 
 # apt upgrade
@@ -326,6 +327,12 @@ RUN echo 3 | update-alternatives --config editor
 IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
 	RUN cd /space/jenkins_cache
 	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
+	RUN cd -
+ENDIF
+# Belt and braces - ensure it's up to date.
+IF FILE_EXISTS /space/git/shutit-home-server
+	RUN cd /space/git/shutit-home-server
+	RUN git pull
 	RUN cd -
 ENDIF
 LOGOUT
