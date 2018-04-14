@@ -165,6 +165,8 @@ IF_NOT RUN google-chrome --version
 	RUN apt update -y >/dev/null 2>&1
 	INSTALL google-chrome-stable
 ENDIF
+RUN apt-file update >/dev/null 2>&1
+RUN apt-get autoremove -y
 
 # ShutIt should be installed already, naturally
 # pip upgrade
@@ -228,6 +230,7 @@ RUN a2enmod proxy_balancer
 RUN a2enmod proxy_connect
 RUN a2enmod proxy_html
 RUN a2enmod php7.2
+RUN a2enmod proxy_wstunnel
 
 # Terraform
 IF_NOT RUN terraform version  | awk '{print $NF}' | head -1 | grep v0.11.3
@@ -343,10 +346,10 @@ RUN chown -R imiell: /space
 ################################################################################
 
 IF_NOT RUN npm -g ll mermaid
-	RUN npm install -g mermaid > /dev/null 2>&1
+	RUN npm install -g mermaid >/dev/null 2>&1
 ENDIF
 IF_NOT RUN which gtop
-	RUN npm install -g gtop > /dev/null 2>&1
+	RUN npm install -g gtop >/dev/null 2>&1
 ENDIF
 
 # CRON SETUP
