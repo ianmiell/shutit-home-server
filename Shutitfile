@@ -96,7 +96,7 @@ INSTALL libapache2-mod-php
 # Virtualbox except on basquiat
 INSTALL ruby-dev
 # Get rid of fog-core, which causes dep issues.
-RUN apt-get remove -y --auto-remove ruby-fog-core || true
+RUN apt remove -y --auto-remove ruby-fog-core || true
 RUN apt purge -y ruby-nokogiri || true
 # Vagrant BEGIN
 # basquiat does not need VB
@@ -123,15 +123,15 @@ RUN timedatectl set-ntp on
 # Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
 IF_NOT RUN apt-cache policy | grep certbot
 	RUN add-apt-repository -y ppa:certbot/certbot
-	RUN apt -y update
+	RUN apt -y update >/dev/null 2>&1
 	INSTALL python-certbot-apache
 ENDIF
 
 # Handbrake
 #IF_NOT RUN apt-cache policy | grep stebbins
 #	RUN add-apt-repository -y ppa:stebbins/handbrake-releases || true
-#	RUN apt -y update || true
-#	RUN apt -y install handbrake-cli || true
+#	RUN apt -y update >/dev/null 2>&1 || true
+#	RUN apt -y install handbrake-cli >/dev/null 2>&1|| true
 #ENDIF
 
 # Powershell
@@ -140,7 +140,7 @@ IF_NOT RUN apt-cache policy | grep microsoft
 	# Register the Microsoft Ubuntu repository
 	RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft.list
 	# Update apt
-	RUN apt update
+	RUN apt update -y >/dev/null 2>&1
 	# Install PowerShell
 	INSTALL powershell
 ENDIF
@@ -154,7 +154,7 @@ ENDIF
 ## tmate.io
 #IF_NOT RUN apt-cache policy | grep tmate
 #	RUN add-apt-repository -y ppa:tmate.io/archive
-#	RUN apt-get update -y 
+#	RUN apt update -y >/dev/null 2>&1
 #	INSTALL tmate
 #ENDIF
 
@@ -162,7 +162,7 @@ ENDIF
 IF_NOT RUN google-chrome --version
 	RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 	RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
-	RUN apt update -y
+	RUN apt update -y >/dev/null 2>&1
 	INSTALL google-chrome-stable
 ENDIF
 
@@ -286,11 +286,11 @@ IF_NOT RUN command chef
 ENDIF
 
 # apt upgrade
-RUN apt -y upgrade
+RUN apt -y upgrade >/dev/null 2>&1
 
 # apt cleanup
 RUN apt-file update
-RUN apt autoremove -y
+RUN apt autoremove -y >/dev/null 2>&1
 RUN apt clean
 
 # Sysstat
