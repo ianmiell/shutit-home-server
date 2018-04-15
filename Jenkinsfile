@@ -7,7 +7,7 @@ try {
   nodes = ['welles','cage','dali','basquiat']
   nodes.each { thisnode ->
     up = true
-    stage(thisnode) {
+    stage(thisnode + 'precheck') {
       node(thisnode) {
         try { 
           timeout(time: 5, unit: 'SECONDS') {
@@ -17,6 +17,9 @@ try {
           echo 'Skipping ' + ${thisnode} + ' as apparently unavailable'
           up = false
         }
+      }
+    }
+    stage(thisnode + 'postcheck') {
         if (up) {
           node(thisnode) {
             sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
