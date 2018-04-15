@@ -20,10 +20,9 @@ try {
       }
     }
     stage(thisnode + 'postcheck') {
-        if (up) {
-          node(thisnode) {
-            sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
-          }
+      if (up) {
+        node(thisnode) {
+          sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
         }
       }
     }
