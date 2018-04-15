@@ -5,20 +5,20 @@ try {
     string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
   ])])
   nodes = ['welles','cage','dali','basquiat']
-  nodes.each { node ->
+  nodes.each { thisnode ->
     up = true
-    stage(${node}) {
-      node(${node}) {
+    stage(thisnode) {
+      node(thisnode) {
         try { 
           timeout(time: 5, unit: 'SECONDS') {
-            sh('echo alive on ' + ${node}) 
+            sh('echo alive on ' + thisnode) 
           }
         } catch(err) {
-          echo 'Skipping ' + ${node} + ' as apparently unavailable'
+          echo 'Skipping ' + ${thisnode} + ' as apparently unavailable'
           up = false
         }
         if (up) {
-          node(${node}) {
+          node(thisnode) {
             sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
           }
         }
