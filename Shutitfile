@@ -70,7 +70,6 @@ INSTALL software-properties-common
 INSTALL curl
 INSTALL apt-transport-https
 INSTALL ca-certificates
-INSTALL qemu
 INSTALL pandoc
 # For sec standards
 INSTALL auditd
@@ -112,6 +111,11 @@ IF_NOT RUN hostname | grep basquiat
 		RUN vagrant plugin install landrush
 	ENDIF
 ENDIF
+INSTALL qemu
+INSTALL qemu-kvm
+INSTALL libvirt-bin
+INSTALL virtinst
+RUN adduser imiell libvirt
 # Vagrant BEGIN
 # VIRTUALIZATION END
 # For authoring
