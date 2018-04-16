@@ -14,7 +14,7 @@ try {
             sh('echo alive on ' + thisnode) 
           }
         } catch(err) {
-          echo 'Skipping ' + ${thisnode} + ' as apparently unavailable'
+          echo 'Skipping ' + thisnode + ' as apparently unavailable'
           up = false
         }
       }
