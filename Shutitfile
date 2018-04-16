@@ -71,6 +71,7 @@ INSTALL curl
 INSTALL apt-transport-https
 INSTALL ca-certificates
 INSTALL pandoc
+INSTALL htop
 # For sec standards
 INSTALL auditd
 INSTALL nmap
