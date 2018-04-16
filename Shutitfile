@@ -168,16 +168,15 @@ ENDIF
 RUN apt-file update >/dev/null 2>&1
 RUN apt-get autoremove -y
 
-# ShutIt should be installed already, naturally
 # pip upgrade
 RUN pip install --upgrade pip
-#RUN pip install shutit
-RUN pip install -U requests
-RUN pip install -U coverage
-RUN pip install -U python-twitter
-RUN pip install -U setuptools
-RUN pip install -U twine
-RUN pip install -U butterfly
+RUN pip install --upgrade requests
+RUN pip install --upgrade coverage
+RUN pip install --upgrade python-twitter
+RUN pip install --upgrade setuptools
+RUN pip install --upgrade twine
+RUN pip install --upgrade butterfly
+RUN pip install --upgrade shutit
 
 # Install docker
 IF_NOT RUN docker version
