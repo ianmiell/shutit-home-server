@@ -4,10 +4,9 @@ try {
   properties([parameters([
     string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
   ])])
-    stage('run') {
-      node('welles') {
-        sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
-      }
+  stage('run') {
+    node('welles') {
+      sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
     }
   }
 } catch(err) {
