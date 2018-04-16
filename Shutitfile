@@ -170,17 +170,17 @@ IF_NOT RUN google-chrome --version
 	INSTALL google-chrome-stable
 ENDIF
 RUN apt-file update >/dev/null 2>&1
-RUN apt-get autoremove -y
+RUN apt-get autoremove -y >/dev/null 2>&1
 
 # pip upgrade
-RUN pip install --upgrade pip
-RUN pip install --upgrade requests
-RUN pip install --upgrade coverage
-RUN pip install --upgrade python-twitter
-RUN pip install --upgrade setuptools
-RUN pip install --upgrade twine
-RUN pip install --upgrade butterfly
-RUN pip install --upgrade shutit
+RUN pip install --upgrade pip >/dev/null 2>&1
+RUN pip install --upgrade requests >/dev/null 2>&1
+RUN pip install --upgrade coverage >/dev/null 2>&1
+RUN pip install --upgrade python-twitter >/dev/null 2>&1
+RUN pip install --upgrade setuptools >/dev/null 2>&1
+RUN pip install --upgrade twine >/dev/null 2>&1
+RUN pip install --upgrade butterfly >/dev/null 2>&1
+RUN pip install --upgrade shutit >/dev/null 2>&1
 
 # Install docker
 IF_NOT RUN docker version
@@ -202,18 +202,17 @@ ENDIF
 RUN mkdir -p /media/storage_{1,2}
 
 # Create space folder and chown it to imiell
-RUN mkdir -p /space
 RUN mkdir -p /space/git
 RUN mkdir -p /space/jenkins_cache
 RUN chown -R imiell: /space
 
 # for inspec tests
 IF_NOT RUN inspec version
-	RUN gem install inspec
+	RUN gem install inspec >/dev/null 2>&1
 ENDIF
 # Asciidoc extras
-RUN gem install --pre asciidoctor-pdf
-RUN gem install coderay pygments.rb tilt slim
+RUN gem install --pre asciidoctor-pdf >/dev/null 2>&1
+RUN gem install coderay pygments.rb tilt slim >/dev/null 2>&1
 
 # Generate an ssh key
 IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
@@ -295,9 +294,9 @@ ENDIF
 RUN apt -y upgrade >/dev/null 2>&1
 
 # apt cleanup
-RUN apt-file update
+RUN apt-file update >/dev/null 2>&1
 RUN apt autoremove -y >/dev/null 2>&1
-RUN apt clean
+RUN apt clean >/dev/null 2>&1
 
 # Sysstat
 RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
