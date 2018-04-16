@@ -1,0 +1,18 @@
+#!groovy
+
+try {
+  properties([parameters([
+    string(name: 'BRANCH_NAME',                                  defaultValue: 'master',                                       description: 'Branch to build'),
+  ])])
+    stage('run') {
+      node('welles') {
+        sh 'cd /space/git/shutit-home-server && git pull && sudo shutit run'
+      }
+    }
+  }
+} catch(err) {
+  mail bcc: '', body: '''See: https://jenkins.meirionconsulting.com/
+
+''' + err, cc: '', from: 'shutit-home-server@jenkins.meirionconsulting.com', replyTo: '', subject: 'shutit-home-server welles run failure', to: 'ian.miell@gmail.com'
+  throw(err)
+}
