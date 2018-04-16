@@ -212,8 +212,22 @@ IF_NOT RUN inspec version
 	RUN gem install inspec >/dev/null 2>&1
 ENDIF
 # Asciidoc extras
-RUN gem install --pre asciidoctor-pdf >/dev/null 2>&1
-RUN gem install coderay pygments.rb tilt slim >/dev/null 2>&1
+IF_NOT RUN gem list | grep -w asciidoctor-pdf
+	RUN gem install --pre asciidoctor-pdf >/dev/null 2>&1
+ENDIF
+IF_NOT RUN gem list | grep -w coderay
+	RUN gem install coderay >/dev/null 2>&1
+ENDIF
+IF_NOT RUN gem list | grep -w pygments.rb
+	RUN gem install pygments.rb >/dev/null 2>&1
+ENDIF
+IF_NOT RUN gem list | grep -w tilt
+	RUN gem install tilt >/dev/null 2>&1
+ENDIF
+IF_NOT RUN gem list | grep -w slim
+	RUN gem install slim >/dev/null 2>&1
+ENDIF
+
 
 # Generate an ssh key
 IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
