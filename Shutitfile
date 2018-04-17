@@ -18,14 +18,13 @@ IF FILE_EXISTS /space/git/work
 	RUN cd /space/git/work
 	RUN git pull
 	LOGOUT imiell
-	RUN touch /space/git/work/bin/crontab_$(hostname -s)_root
-	RUN touch /space/git/work/bin/crontab_$(hostname -s)_imiell
-	RUN cat /space/git/work/bin/crontab_root | crontab -
+
 	RUN cat /space/git/work/bin/crontab_imiell | crontab -u imiell -
+
+	RUN cat /space/git/work/bin/crontab_root | crontab -
+	RUN touch /space/git/work/bin/crontab_$(hostname -s)_root
 	RUN cp /space/git/work/bin/crontab_$(hostname -s)_root   /etc/cron.d/
-	RUN cp /space/git/work/bin/crontab_$(hostname -s)_imiell /etc/cron.d/
 	RUN chown root:   /space/git/work/bin/crontab_*_root
-	RUN chown imiell: /space/git/work/bin/crontab_*_imiell
 ENDIF
 
 RUN usermod -aG sudo imiell
