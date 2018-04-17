@@ -225,6 +225,9 @@ ENDIF
 IF_NOT RUN gem list | grep -w asciidoctor-pdf
 	RUN gem install --pre asciidoctor-pdf >/dev/null 2>&1
 ENDIF
+IF_NOT RUN gem list | grep -w asciidoctor-revealjs
+	RUN gem install --pre asciidoctor-revealjs >/dev/null 2>&1
+ENDIF
 IF_NOT RUN gem list | grep -w coderay
 	RUN gem install coderay >/dev/null 2>&1
 ENDIF
