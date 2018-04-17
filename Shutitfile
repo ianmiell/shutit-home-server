@@ -1,9 +1,4 @@
 # We assert here that we are running as root
-
-IF_NOT RUN false
-	RUN touch amnas
-ENDIF
-
 SEND whoami
 ASSERT_OUTPUT root
 
