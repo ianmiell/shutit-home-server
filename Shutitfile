@@ -17,6 +17,22 @@ ASSERT_OUTPUT Ubuntu
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
 ASSERT_OUTPUT 1
 
+# CRON SETUP
+IF FILE_EXISTS /space/git/work
+	USER imiell
+	RUN cd /space/git/work
+	RUN git pull
+	LOGOUT imiell
+	RUN touch /space/git/work/bin/crontab_$(hostname -s)_root
+	RUN touch /space/git/work/bin/crontab_$(hostname -s)_imiell
+	RUN cat /space/git/work/bin/crontab_root | crontab -
+	RUN cat /space/git/work/bin/crontab_imiell | crontab -u imiell -
+	RUN cp /space/git/work/bin/crontab_$(hostname -s)_root   /etc/cron.d/
+	RUN cp /space/git/work/bin/crontab_$(hostname -s)_imiell /etc/cron.d/
+	RUN chown root:   /space/git/work/bin/crontab_*_root
+	RUN chown imiell: /space/git/work/bin/crontab_*_imiell
+ENDIF
+
 RUN usermod -aG sudo imiell
 
 # Add a nexus user
@@ -367,24 +383,6 @@ IF_NOT RUN npm -g ll mermaid
 ENDIF
 IF_NOT RUN which gtop
 	RUN npm install -g gtop >/dev/null 2>&1
-ENDIF
-
-# CRON SETUP
-IF FILE_EXISTS /space/git/work
-	USER imiell
-	RUN cd /space/git/work
-	RUN git pull
-	LOGOUT imiell
-	SCRIPT_BEGIN
-touch /space/git/work/bin/crontab_$(hostname -s)_root
-touch /space/git/work/bin/crontab_$(hostname -s)_imiell
-cat /space/git/work/bin/crontab_root | crontab -
-cat /space/git/work/bin/crontab_imiell | crontab -u imiell -
-cp /space/git/work/bin/crontab_$(hostname -s)_root   /etc/cron.d/
-cp /space/git/work/bin/crontab_$(hostname -s)_imiell /etc/cron.d/
-chown root:   /space/git/work/bin/crontab_*_root
-chown imiell: /space/git/work/bin/crontab_*_imiell
-	SCRIPT_END
 ENDIF
 
 RUN echo Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
