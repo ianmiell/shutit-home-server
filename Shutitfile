@@ -378,9 +378,8 @@ IF FILE_EXISTS /space/git/work
 	SCRIPT_BEGIN
 touch /space/git/work/bin/crontab_$(hostname -s)_root
 touch /space/git/work/bin/crontab_$(hostname -s)_imiell
-cat /space/git/work/bin/root_crontab | crontab -
-cat /space/git/work/bin/root_crontab | crontab -
-cat /space/git/work/bin/imiell_crontab | crontab -u imiell -
+cat /space/git/work/bin/crontab_root | crontab -
+cat /space/git/work/bin/crontab_imiell | crontab -u imiell -
 cp /space/git/work/bin/crontab_$(hostname -s)_root   /etc/cron.d/
 cp /space/git/work/bin/crontab_$(hostname -s)_imiell /etc/cron.d/
 chown root:   /space/git/work/bin/crontab_*_root
