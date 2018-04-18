@@ -314,7 +314,7 @@ IF_NOT RUN command chef
 ENDIF
 
 # apt upgrade
-RUN apt -y upgrade >/dev/null 2>&1
+RUN DEBIAN_FRONTEND=noninteractive apt -y upgrade >/dev/null 2>&1
 
 # apt cleanup
 RUN apt-file update >/dev/null 2>&1
