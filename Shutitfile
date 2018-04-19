@@ -100,9 +100,6 @@ INSTALL libapache2-mod-php
 # VIRTUALIZATION BEGIN
 # Virtualbox except on basquiat
 INSTALL ruby-dev
-# Get rid of fog-core, which causes dep issues.
-RUN apt remove -y --auto-remove ruby-fog-core || true
-RUN apt purge -y ruby-nokogiri || true
 # Vagrant BEGIN
 # basquiat does not need VB
 IF_NOT RUN hostname | grep basquiat
@@ -113,6 +110,9 @@ IF_NOT RUN hostname | grep basquiat
 	INSTALL zlib1g-dev
 	INSTALL libvirt-dev
 	# Landrush plugin reqs DONE
+	# Get rid of fog-core, which causes dep issues.
+	RUN apt remove -y --auto-remove ruby-fog-core || true
+	RUN apt purge -y ruby-nokogiri || true
 	IF_NOT RUN vagrant plugin list | grep landrush
 		RUN vagrant plugin install landrush
 	ENDIF
@@ -179,14 +179,14 @@ RUN apt-file update >/dev/null 2>&1
 RUN apt-get autoremove -y >/dev/null 2>&1
 
 # pip upgrade
-RUN pip install --upgrade pip >/dev/null 2>&1
-RUN pip install --upgrade requests >/dev/null 2>&1
-RUN pip install --upgrade coverage >/dev/null 2>&1
-RUN pip install --upgrade python-twitter >/dev/null 2>&1
-RUN pip install --upgrade setuptools >/dev/null 2>&1
-RUN pip install --upgrade twine >/dev/null 2>&1
-RUN pip install --upgrade butterfly >/dev/null 2>&1
-RUN pip install --upgrade shutit >/dev/null 2>&1
+RUN pip install --upgrade -q pip
+RUN pip install --upgrade -q requests
+RUN pip install --upgrade -q coverage
+RUN pip install --upgrade -q python-twitter
+RUN pip install --upgrade -q setuptools
+RUN pip install --upgrade -q twine
+RUN pip install --upgrade -q butterfly
+RUN pip install --upgrade -q shutit
 
 # Install docker
 IF_NOT RUN docker version
