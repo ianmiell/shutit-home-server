@@ -30,6 +30,8 @@ IF_NOT RUN id -u nexus
 ENDIF
 
 # Install required packages
+# Required for some dep issues with python3
+INSTALL sosreport
 # Required for gems
 INSTALL libtool
 INSTALL autoconf
@@ -351,8 +353,6 @@ IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
 	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
 ENDIF
 # Log imiell out
-# ensure vim is the default for imiell
-RUN echo 3 | update-alternatives --config editor
 IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
 	RUN cd /space/jenkins_cache
 	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
