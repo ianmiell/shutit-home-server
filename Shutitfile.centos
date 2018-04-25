@@ -1,0 +1,169 @@
+# We assert here that we are running as root
+SEND whoami
+ASSERT_OUTPUT root
+
+LOG DEBUG
+
+# Check this is Ubuntu
+SEND lsb_release -d -s | awk '{print $1}'
+ASSERT_OUTPUT Ubuntu
+
+# We assert here the user imiell was set up by the OS installation process
+SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
+ASSERT_OUTPUT 1
+
+# CRON SETUP
+IF FILE_EXISTS /space/git/work
+	USER imiell
+	RUN cd /space/git/work
+	RUN git pull
+	LOGOUT imiell
+	RUN cat /space/git/work/bin/crontab_imiell <(cat crontab_$(hostname)_imiell 2>/dev/null || true) | crontab -u imiell -
+	RUN cat /space/git/work/bin/crontab_root <(cat crontab_$(hostname)_root 2>/dev/null || true) | crontab -u root -
+ENDIF
+
+RUN usermod -aG sudo imiell
+
+# Add a nexus user
+IF_NOT RUN id -u nexus
+	RUN useradd nexus
+ENDIF
+
+INSTALL sysstat
+
+# pip upgrade
+RUN pip install --upgrade -q pip
+RUN pip install --upgrade -q requests
+RUN pip install --upgrade -q coverage
+RUN pip install --upgrade -q python-twitter
+RUN pip install --upgrade -q setuptools
+RUN pip install --upgrade -q twine
+RUN pip install --upgrade -q butterfly
+RUN pip install --upgrade -q shutit
+
+# Install docker
+IF_NOT RUN docker version
+	INSTALL docker.io
+	# Add imiell to the docker user group
+	RUN usermod -G docker -a imiell
+	RUN usermod -G staff -a imiell
+ENDIF
+
+
+# youtube-dl
+IF_NOT FILE_EXISTS /usr/local/bin/youtube-dl
+	RUN wget https://yt-dl.org/latest/youtube-dl -O /usr/local/bin/youtube-dl
+	RUN chmod a+x /usr/local/bin/youtube-dl
+	RUN hash -r
+ENDIF
+
+# Set up local storage
+RUN mkdir -p /media/storage_{1,2}
+
+# Create space folder and chown it to imiell
+RUN mkdir -p /space/git
+RUN mkdir -p /space/jenkins_cache
+RUN chown -R imiell: /space
+
+# Generate an ssh key
+IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
+	RUN ssh-keygen
+	# Note that the response to 'already exists' below prevents overwrite here.
+	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
+ENDIF
+
+# Terraform
+IF_NOT RUN terraform version  | awk '{print $NF}' | head -1 | grep v0.11.3
+	RUN wget https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip
+	RUN unzip terraform_0.11.3_linux_amd64.zip
+	RUN mv terraform /usr/local/bin
+	RUN rm -f terraform*
+ENDIF
+
+# Jenkins setup
+RUN mkdir -p /var/jenkins
+RUN chown imiell: /var/jenkins
+
+
+RUN sed -i 's/hosts:.*NOTFOUND.*/hosts: files dns/' /etc/nsswitch.conf
+
+# Power/nosleep management
+IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
+	RUN sed -i 's/HandleLidSwitch.*/HandleLidSwitch=ignore' /etc/systemd/logind.conf || true
+	RUN systemctl daemon-reload && systemctl restart systemd-logind.service
+ENDIF
+IF_NOT RUN grep HandleLidSwitch=ignore /etc/systemd/logind.conf
+	RUN echo HandleLidSwitch=ignore >> /etc/systemd/logind.conf
+	RUN systemctl daemon-reload && systemctl restart systemd-logind.service
+ENDIF
+
+IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
+	RUN sed -i 's/IgnoreLid=.*/IgnoreLid=true' /etc/UPower/UPower.conf || true
+	RUN systemctl daemon-reload && systemctl restart upower.service
+ENDIF
+IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
+	RUN echo IgnoreLid=true >> /etc/UPower/UPower.conf
+	RUN systemctl daemon-reload &&  systemctl restart upower.service
+ENDIF
+# Takes effect on next reboot
+# https://unix.stackexchange.com/questions/269661/how-to-turn-off-wireless-power-management-permanently
+RUN sed -i 's/wifi.powersave.*/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+# Power management
+RUN systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+IF_NOT RUN grep SUSPEND_METHODS="none" /etc/default/acpi-support
+	RUN sed -i 's/SUSPEND_METHODS=".*/SUSPEND_METHODS="none"/' /etc/default/acpi-support || true
+	RUN /etc/init.d/acpid restart
+ENDIF
+
+# Sysstat
+RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
+
+# Auditd
+IF_NOT RUN grep -- '-a exit,always -F arch=b64 -S execve' /etc/audit/audit.rules
+	RUN echo '-a exit,always -F arch=b64 -S execve' >> /etc/audit/audit.rules
+ENDIF
+IF_NOT RUN grep -- '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
+	RUN echo '-a exit,always -F arch=b32 -S execve' >> /etc/audit/audit.rules
+ENDIF
+
+################################################################################
+# Log me in as imiell
+USER imiell
+# If it's not been done before, check out my dotfiles and set it up
+IF_NOT FILE_EXISTS /home/imiell/.dotfiles
+	RUN cd /home/imiell
+	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
+	RUN cd .dotfiles
+	RUN ./script/bootstrap
+	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite all=O']
+ENDIF
+
+# Generate an ssh key
+IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
+	RUN ssh-keygen
+	# Note that the response to 'already exists' below prevents overwrite here.
+	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
+ENDIF
+# Log imiell out
+IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
+	RUN cd /space/jenkins_cache
+	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
+	RUN cd -
+ENDIF
+# Belt and braces - ensure it's up to date.
+IF FILE_EXISTS /space/git/shutit-home-server
+	RUN cd /space/git/shutit-home-server
+	RUN git pull
+	RUN cd -
+ENDIF
+LOGOUT
+# ensure vim is the default for root
+RUN echo 3 | update-alternatives --config editor
+RUN chown -R imiell: /space
+################################################################################
+
+IF_NOT RUN which gtop
+	RUN npm install -g gtop >/dev/null 2>&1
+ENDIF
+
+RUN echo Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
