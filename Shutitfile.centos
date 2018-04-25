@@ -22,7 +22,7 @@ IF FILE_EXISTS /space/git/work
 	RUN cat /space/git/work/bin/crontab_root <(cat crontab_$(hostname)_root 2>/dev/null || true) | crontab -u root -
 ENDIF
 
-RUN usermod -aG sudo imiell
+RUN usermod -aG wheel imiell
 
 # Add a nexus user
 IF_NOT RUN id -u nexus
@@ -30,6 +30,9 @@ IF_NOT RUN id -u nexus
 ENDIF
 
 INSTALL sysstat
+INSTALL wget
+INSTALL unzip
+INSTALL npm
 
 # pip upgrade
 RUN pip install --upgrade -q pip
@@ -44,9 +47,6 @@ RUN pip install --upgrade -q shutit
 # Install docker
 IF_NOT RUN docker version
 	INSTALL docker.io
-	# Add imiell to the docker user group
-	RUN usermod -G docker -a imiell
-	RUN usermod -G staff -a imiell
 ENDIF
 
 
@@ -105,18 +105,8 @@ IF_NOT RUN grep IgnoreLid=true /etc/UPower/UPower.conf
 	RUN echo IgnoreLid=true >> /etc/UPower/UPower.conf
 	RUN systemctl daemon-reload &&  systemctl restart upower.service
 ENDIF
-# Takes effect on next reboot
-# https://unix.stackexchange.com/questions/269661/how-to-turn-off-wireless-power-management-permanently
-RUN sed -i 's/wifi.powersave.*/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 # Power management
 RUN systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
-IF_NOT RUN grep SUSPEND_METHODS="none" /etc/default/acpi-support
-	RUN sed -i 's/SUSPEND_METHODS=".*/SUSPEND_METHODS="none"/' /etc/default/acpi-support || true
-	RUN /etc/init.d/acpid restart
-ENDIF
-
-# Sysstat
-RUN sed -i 's/^ENABLED.*/ENABLED="true"/' /etc/default/sysstat
 
 # Auditd
 IF_NOT RUN grep -- '-a exit,always -F arch=b64 -S execve' /etc/audit/audit.rules
