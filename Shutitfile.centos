@@ -32,6 +32,7 @@ INSTALL epel
 INSTALL python-pip
 
 INSTALL gcc
+INSTALL gcc-c++
 INSTALL zlib-devel
 INSTALL ruby-devel
 INSTALL libxslt-devel
@@ -43,6 +44,8 @@ INSTALL virt-install
 INSTALL qemu-kvm
 INSTALL virt-manager
 INSTALL java
+
+# TODO: vagrant and plugins vagrant-librvirt and landrush vagrant-mutate?
 
 IF_NOT RUN groups imiell | grep kvm
 	# First time only
