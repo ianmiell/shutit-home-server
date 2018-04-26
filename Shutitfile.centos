@@ -42,6 +42,7 @@ INSTALL libvirt-python
 INSTALL virt-install
 INSTALL qemu-kvm
 INSTALL virt-manager
+INSTALL java
 
 IF_NOT RUN groups imiell | grep kvm
 	# First time only
