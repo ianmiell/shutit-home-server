@@ -4,9 +4,8 @@ ASSERT_OUTPUT root
 
 LOG DEBUG
 
-# Check this is Ubuntu
-SEND lsb_release -d -s | awk '{print $1}'
-ASSERT_OUTPUT Ubuntu
+# Check this is Centos
+SEND ls /etc/centos-release
 
 # We assert here the user imiell was set up by the OS installation process
 SEND cut -d: -f1 /etc/passwd | grep imiell | wc -l
@@ -31,7 +30,6 @@ ENDIF
 
 INSTALL epel
 INSTALL python-pip
-
 
 INSTALL gcc
 INSTALL zlib-devel
@@ -69,14 +67,14 @@ INSTALL unzip
 INSTALL npm
 
 # pip upgrade
-RUN pip install --upgrade -q pip
-RUN pip install --upgrade -q requests
-RUN pip install --upgrade -q coverage
-RUN pip install --upgrade -q python-twitter
-RUN pip install --upgrade -q setuptools
-RUN pip install --upgrade -q twine
-RUN pip install --upgrade -q butterfly
-RUN pip install --upgrade -q shutit
+RUN pip install -q pip
+RUN pip install -q requests
+RUN pip install -q coverage
+RUN pip install -q python-twitter
+RUN pip install -q setuptools
+RUN pip install -q twine
+RUN pip install -q butterfly
+RUN pip install -q shutit
 
 # Install docker
 IF_NOT RUN docker version
@@ -182,7 +180,6 @@ IF FILE_EXISTS /space/git/shutit-home-server
 ENDIF
 LOGOUT
 # ensure vim is the default for root
-RUN echo 3 | update-alternatives --config editor
 RUN chown -R imiell: /space
 ################################################################################
 
