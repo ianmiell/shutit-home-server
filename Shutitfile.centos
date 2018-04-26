@@ -29,6 +29,40 @@ IF_NOT RUN id -u nexus
 	RUN useradd nexus
 ENDIF
 
+INSTALL epel
+INSTALL python-pip
+
+
+INSTALL gcc
+INSTALL zlib-devel
+INSTALL ruby-devel
+INSTALL libxslt-devel
+INSTALL libxml2-devel
+INSTALL libvirt
+INSTALL libvirt-devel
+INSTALL libvirt-python
+INSTALL virt-install
+INSTALL qemu-kvm
+INSTALL virt-manager
+
+IF_NOT RUN groups imiell | grep kvm
+	# First time only
+	RUN rmmod kvm_intel
+	RUN rmmod kvm
+	RUN modprobe kvm
+	RUN modprobe kvm_intel
+	RUN usermod -G kvm -a imiell
+ENDIF
+IF_NOT RUN groups imiell | grep qemu
+	RUN usermod -G qemu -a imiell
+ENDIF
+IF_NOT RUN groups imiell | grep libvirt
+	RUN usermod -G libvirt -a imiell
+ENDIF
+
+
+INSTALL xorg-x11-fonts
+INSTALL tmux
 INSTALL sysstat
 INSTALL wget
 INSTALL unzip
