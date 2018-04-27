@@ -44,6 +44,7 @@ INSTALL virt-install
 INSTALL qemu-kvm
 INSTALL virt-manager
 INSTALL java
+INSTALL libguestfs-tools-c
 
 # TODO: vagrant and plugins vagrant-librvirt and landrush vagrant-mutate?
 

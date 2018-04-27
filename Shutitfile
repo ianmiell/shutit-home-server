@@ -315,9 +315,6 @@ IF_NOT RUN command chef
 	RUN rm -f chefdk.deb
 ENDIF
 
-# apt upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt -y upgrade >/dev/null 2>&1
-
 # apt cleanup
 RUN apt-file update >/dev/null 2>&1
 RUN apt autoremove -y >/dev/null 2>&1
