@@ -141,7 +141,7 @@ INSTALL dnsmasq
 IF_NOT RUN test -f /etc/google-dns.resolv.conf
 	RUN echo nameserver 8.8.8.8 > /etc/google-dns.resolv.conf
 	RUN echo nameserver 8.8.4.4 >> /etc/google-dns.resolv.conf
-	ENSURE_LINE ['filename=/etc/dnsmasq.conf','line=IGNORE_RESOLVCONF=yes','.*IGNORE_RESOLVCONF=.*']
+	RUN grep ^IGNORE_RESOLVCONF /etc/dnsmasq.conf || echo IGNORE_RESOLVCONF=yes >> /etc/dnsmasq.conf
 	RUN systemctl restart dnsmasq
 	RUN systemctl restart systemd-resolved
 ENDIF
