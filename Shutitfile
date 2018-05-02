@@ -138,7 +138,7 @@ INSTALL ntp
 RUN timedatectl set-ntp on
 
 INSTALL dnsmasq
-IF_NOT test -f /etc/google-dns.resolv.conf
+IF_NOT RUN test -f /etc/google-dns.resolv.conf
 	RUN echo nameserver 8.8.8.8 > /etc/google-dns.resolv.conf
 	RUN echo nameserver 8.8.4.4 >> /etc/google-dns.resolv.conf
 	ENSURE_LINE ['filename=/etc/dnsmasq.conf','line=IGNORE_RESOLVCONF=yes','.*IGNORE_RESOLVCONF=.*']
