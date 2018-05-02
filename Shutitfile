@@ -137,6 +137,15 @@ RUN adduser imiell libvirt
 INSTALL ntp
 RUN timedatectl set-ntp on
 
+INSTALL dnsmasq
+IF_NOT test -f /etc/google-dns.resolv.conf
+	RUN echo nameserver 8.8.8.8 > /etc/google-dns.resolv.conf
+	RUN echo nameserver 8.8.4.4 >> /etc/google-dns.resolv.conf
+	ENSURE_LINE ['filename=/etc/dnsmasq.conf','line=IGNORE_RESOLVCONF=yes','.*IGNORE_RESOLVCONF=.*']
+	RUN systemctl restart dnsmasq
+	RUN systemctl restart systemd-resolved
+ENDIF
+
 
 # Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
 IF_NOT RUN apt-cache policy | grep certbot
