@@ -20,10 +20,10 @@ IF FILE_EXISTS /space/git/work
 	LOGOUT imiell
 	RUN cat /space/git/work/bin/crontab_imiell > /tmp/imiellcron
 	RUN (cat /space/git/work/bin/crontab_$(hostname)_imiell 2>/tmp/imiellcronerr || true) >> /tmp/imiellcron
-	RUN cat imiellcron | crontab -u imiell -
+	RUN cat /tmp/imiellcron | crontab -u imiell -
 	RUN cat /space/git/work/bin/crontab_root > rootcron
 	RUN (cat /space/git/work/bin/crontab_$(hostname)_root 2>/tmp/rootcronerr || true) >> /tmp/rootcron
-	RUN cat rootcron | crontab -
+	RUN cat /tmp/rootcron | crontab -
 ENDIF
 
 RUN usermod -aG sudo imiell
