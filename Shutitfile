@@ -21,7 +21,7 @@ IF FILE_EXISTS /space/git/work
 	RUN cat /space/git/work/bin/crontab_imiell > /tmp/imiellcron
 	RUN (cat /space/git/work/bin/crontab_$(hostname)_imiell 2>/tmp/imiellcronerr || true) >> /tmp/imiellcron
 	RUN cat /tmp/imiellcron | crontab -u imiell -
-	RUN cat /space/git/work/bin/crontab_root > rootcron
+	RUN cat /space/git/work/bin/crontab_root > /tmp/rootcron
 	RUN (cat /space/git/work/bin/crontab_$(hostname)_root 2>/tmp/rootcronerr || true) >> /tmp/rootcron
 	RUN cat /tmp/rootcron | crontab -
 ENDIF
