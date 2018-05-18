@@ -111,7 +111,7 @@ INSTALL ruby-dev
 IF_NOT RUN hostname | grep basquiat
 	INSTALL virtualbox
 	INSTALL virtualbox-guest-dkms
-	INSTALL vagrant
+	RUN wget https://releases.hashicorp.com/vagrant/2.1.1/vagrant_2.1.1_x86_64.deb && dpkg -i vagrant_2.1.1_x86_64.deb && rm vagrant_2.1.1_x86_64.deb
 	# Landrush plugin reqs BEGIN
 	INSTALL zlib1g-dev
 	INSTALL libvirt-dev
