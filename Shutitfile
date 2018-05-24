@@ -136,6 +136,9 @@ RUN adduser imiell libvirt
 INSTALL ntp
 RUN timedatectl set-ntp on
 
+# Install fpaste
+RUN git clone git://git.fedorahosted.org/fpaste.git && cd fpaste && make install && cd .. && rm -rf fpaste
+
 INSTALL dnsmasq
 IF_NOT RUN test -f /etc/google-dns.resolv.conf
 	RUN echo nameserver 8.8.8.8 > /etc/google-dns.resolv.conf
@@ -151,6 +154,13 @@ IF_NOT RUN apt-cache policy | grep certbot
 	RUN add-apt-repository -y ppa:certbot/certbot
 	RUN apt -y update >/dev/null 2>&1
 	INSTALL python-certbot-apache
+ENDIF
+
+
+IF_NOT RUN apt-cache policy | grep jonathonf.vim
+	RUN add-apt-repository -y ppa:jonathonf/vim
+	RUN apt -y update >/dev/null 2>&1
+	INSTALL vim
 ENDIF
 
 # Handbrake
