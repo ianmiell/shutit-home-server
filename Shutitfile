@@ -137,16 +137,16 @@ INSTALL ntp
 RUN timedatectl set-ntp on
 
 # Install fpaste
-RUN git clone git://git.fedorahosted.org/fpaste.git && cd fpaste && make install && cd .. && rm -rf fpaste
+#RUN git clone git://git.fedorahosted.org/fpaste.git && cd fpaste && make install && cd .. && rm -rf fpaste
 
-INSTALL dnsmasq
-IF_NOT RUN test -f /etc/google-dns.resolv.conf
-	RUN echo nameserver 8.8.8.8 > /etc/google-dns.resolv.conf
-	RUN echo nameserver 8.8.4.4 >> /etc/google-dns.resolv.conf
-	RUN grep ^IGNORE_RESOLVCONF /etc/default/dnsmasq || echo IGNORE_RESOLVCONF=yes >> /etc/default/dnsmasq
-	RUN systemctl restart dnsmasq
-	RUN systemctl restart systemd-resolved
-ENDIF
+#INSTALL dnsmasq
+#IF_NOT RUN test -f /etc/google-dns.resolv.conf
+#	RUN echo nameserver 8.8.8.8 > /etc/google-dns.resolv.conf
+#	RUN echo nameserver 8.8.4.4 >> /etc/google-dns.resolv.conf
+#	RUN grep ^IGNORE_RESOLVCONF /etc/default/dnsmasq || echo IGNORE_RESOLVCONF=yes >> /etc/default/dnsmasq
+#	RUN systemctl restart dnsmasq
+#	RUN systemctl restart systemd-resolved
+#ENDIF
 
 
 # Let's encrypt: https://certbot.eff.org/#ubuntuxenial-apache
