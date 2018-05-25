@@ -122,7 +122,7 @@ IF_NOT RUN hostname | grep basquiat
 	IF_NOT RUN vagrant plugin list | grep landrush
 		RUN vagrant plugin install landrush
 	ENDIF
-	RUN sudo chown -R imiell: /home/imiell/.vagrant.d/
+	RUN chown -R imiell: /home/imiell/.vagrant.d/ || true
 ENDIF
 INSTALL qemu
 INSTALL qemu-kvm
