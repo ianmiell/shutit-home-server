@@ -36,6 +36,8 @@ ENDIF
 IF RUN hostname | grep basquiat
 	QUIT 'on basquiat'	
 ENDIF
+
+
 # Install required packages
 # Required for some dep issues with python3
 INSTALL sosreport
@@ -138,6 +140,12 @@ RUN adduser imiell libvirt
 # NTP
 INSTALL ntp
 RUN timedatectl set-ntp on
+
+INSTALL sysdig
+RUN curl -s https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public | apt-key add -
+RUN curl -s -o /etc/apt/sources.list.d/draios.list https://s3.amazonaws.com/download.draios.com/stable/deb/draios.list
+RUN apt-get update -y
+INSTALL falco
 
 # Install fpaste
 #RUN git clone git://git.fedorahosted.org/fpaste.git && cd fpaste && make install && cd .. && rm -rf fpaste
