@@ -33,11 +33,6 @@ IF_NOT RUN id -u nexus
 	RUN useradd nexus
 ENDIF
 
-IF RUN hostname | grep basquiat
-	QUIT 'on basquiat'	
-ENDIF
-
-
 # Install required packages
 # Required for some dep issues with python3
 INSTALL sosreport
