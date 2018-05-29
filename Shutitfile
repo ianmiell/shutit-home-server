@@ -36,6 +36,8 @@ ENDIF
 # Install required packages
 # Required for some dep issues with python3
 INSTALL sosreport
+# Required to diagnose crashes
+INSTALL crash
 # Required for gems
 INSTALL libtool
 INSTALL autoconf
