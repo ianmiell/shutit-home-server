@@ -144,6 +144,10 @@ RUN curl -s -o /etc/apt/sources.list.d/draios.list https://s3.amazonaws.com/down
 RUN apt-get update -y
 INSTALL falco
 
+# latest dns utils, including drill
+INSTALL ldnsutils
+INSTALL libldns2
+
 # Install fpaste
 #RUN git clone git://git.fedorahosted.org/fpaste.git && cd fpaste && make install && cd .. && rm -rf fpaste
 
