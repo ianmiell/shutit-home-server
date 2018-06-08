@@ -108,24 +108,25 @@ INSTALL libapache2-mod-php
 # VIRTUALIZATION BEGIN
 # Virtualbox except on basquiat
 INSTALL ruby-dev
+# VAGRANT PROBLEMS?
 # Vagrant BEGIN
 # basquiat does not need VB
-IF_NOT RUN hostname | grep basquiat
-	INSTALL virtualbox
-	INSTALL virtualbox-guest-dkms
-	RUN wget https://releases.hashicorp.com/vagrant/2.1.1/vagrant_2.1.1_x86_64.deb && dpkg -i vagrant_2.1.1_x86_64.deb && rm vagrant_2.1.1_x86_64.deb
-	# Landrush plugin reqs BEGIN
-	INSTALL zlib1g-dev
-	INSTALL libvirt-dev
-	# Landrush plugin reqs DONE
-	# Get rid of fog-core, which causes dep issues.
-	RUN apt remove -y --auto-remove ruby-fog-core || true
-	RUN apt purge -y ruby-nokogiri || true
-	IF_NOT RUN vagrant plugin list | grep landrush
-		RUN vagrant plugin install landrush
-	ENDIF
-	RUN chown -R imiell: /home/imiell/.vagrant.d/ || true
-ENDIF
+#IF_NOT RUN hostname | grep basquiat
+#	INSTALL virtualbox
+#	INSTALL virtualbox-guest-dkms
+#	RUN wget https://releases.hashicorp.com/vagrant/2.1.1/vagrant_2.1.1_x86_64.deb && dpkg -i vagrant_2.1.1_x86_64.deb && rm vagrant_2.1.1_x86_64.deb
+#	# Landrush plugin reqs BEGIN
+#	INSTALL zlib1g-dev
+#	INSTALL libvirt-dev
+#	# Landrush plugin reqs DONE
+#	# Get rid of fog-core, which causes dep issues.
+#	RUN apt remove -y --auto-remove ruby-fog-core || true
+#	RUN apt purge -y ruby-nokogiri || true
+#	IF_NOT RUN vagrant plugin list | grep landrush
+#		RUN vagrant plugin install landrush
+#	ENDIF
+#	RUN chown -R imiell: /home/imiell/.vagrant.d/ || true
+#ENDIF
 INSTALL qemu
 INSTALL qemu-kvm
 INSTALL libvirt-bin
