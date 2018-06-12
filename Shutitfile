@@ -218,14 +218,27 @@ RUN apt-file update >/dev/null 2>&1
 RUN apt-get autoremove -y >/dev/null 2>&1
 
 # pip upgrade
-RUN pip install --upgrade -q pip
-RUN pip install --upgrade -q requests
-RUN pip install --upgrade -q coverage
-RUN pip install --upgrade -q python-twitter
-RUN pip install --upgrade -q setuptools
-RUN pip install --upgrade -q twine
-RUN pip install --upgrade -q butterfly
-RUN pip install --upgrade -q shutit
+IF_NOT RUN pip list | grep requests
+	RUN pip install requests
+ENDIF
+IF_NOT RUN pip list | grep coverage
+	RUN pip install coverage
+ENDIF
+IF_NOT RUN pip list | grep python-twitter
+	RUN pip install python-twitter
+ENDIF
+IF_NOT RUN pip list | grep setuptools
+	RUN pip install setuptools
+ENDIF
+IF_NOT RUN pip list | grep twine
+	RUN pip install twine
+ENDIF
+IF_NOT RUN pip list | grep butterfly
+	RUN pip install butterfly
+ENDIF
+IF_NOT RUN pip list | grep shutit
+	RUN pip install shutit
+ENDIF
 
 # Install docker
 IF_NOT RUN docker version
