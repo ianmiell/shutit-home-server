@@ -256,6 +256,7 @@ IF_NOT FILE_EXISTS /usr/local/bin/youtube-dl
 	RUN hash -r
 ENDIF
 
+
 # Set up local storage
 RUN mkdir -p /media/storage_{1,2}
 
@@ -411,6 +412,8 @@ IF FILE_EXISTS /space/git/shutit-home-server
 	RUN git pull
 	RUN cd -
 ENDIF
+RUN mkdir -p /home/imiell/.aws
+RUN chown 0600 /home/imiell/.aws
 LOGOUT
 # ensure vim is the default for root
 RUN echo 3 | update-alternatives --config editor
