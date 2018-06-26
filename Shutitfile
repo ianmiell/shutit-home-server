@@ -25,6 +25,11 @@ IF FILE_EXISTS /space/git/work
 	RUN (cat /space/git/work/bin/crontab_$(hostname)_root 2>/tmp/rootcronerr || true) >> /tmp/rootcron
 	RUN cat /tmp/rootcron | crontab -
 ENDIF
+IF FILE_EXISTS /space/git/work
+	IF FILE_EXISTS /etc/audit/rules.d
+		RUN cp /space/git/work/bin/imiell_audit.rules /etc/audit/rules.d
+	ENDIF
+ENDIF
 
 RUN usermod -aG sudo imiell
 
