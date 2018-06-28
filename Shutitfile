@@ -417,7 +417,7 @@ IF FILE_EXISTS /space/git/shutit-home-server
 	RUN git pull
 	RUN cd -
 ENDIF
-IF NOT FILE_EXISTS /home/imiell/.aws
+IF_NOT FILE_EXISTS /home/imiell/.aws
 	RUN mkdir -p /home/imiell/.aws
 	RUN chown 0600 /home/imiell/.aws
 ENDIF
