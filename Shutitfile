@@ -419,7 +419,7 @@ IF FILE_EXISTS /space/git/shutit-home-server
 ENDIF
 IF_NOT FILE_EXISTS /home/imiell/.aws
 	RUN mkdir -p /home/imiell/.aws
-	RUN chown 0600 /home/imiell/.aws
+	RUN chmode 0600 /home/imiell/.aws
 ENDIF
 LOGOUT
 # ensure vim is the default for root
