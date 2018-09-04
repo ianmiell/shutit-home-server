@@ -27,7 +27,7 @@ IF FILE_EXISTS /space/git/work
 ENDIF
 IF FILE_EXISTS /space/git/work
 	IF FILE_EXISTS /etc/audit/rules.d
-		RUN cp /space/git/work/bin/imiell_audit.rules /etc/audit/rules.d
+		RUN cp /space/git/work/bin/imiell_auditd.rules /etc/audit/rules.d
 	ENDIF
 ENDIF
 
