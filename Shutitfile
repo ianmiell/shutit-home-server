@@ -435,7 +435,7 @@ IF_NOT RUN which gtop
 ENDIF
 
 # Allow to get src
-RUN sed -i 's/# deb-src/deb-src/' /etc/sources.list
+RUN sed -i 's/# deb-src/deb-src/' /etc/apt/sources.list
 RUN apt-get update -y
 
 RUN echo Now ssh-copy-id around, git clone ssh://imiell@meirionconsulting.com:/var/cache/git/work.git and re-run
