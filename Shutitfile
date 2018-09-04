@@ -14,9 +14,9 @@ ASSERT_OUTPUT 1
 
 # CRON SETUP
 IF FILE_EXISTS /space/git/work
-	USER imiell
-	RUN cd /space/git/work
-	RUN git pull
+	#USER imiell
+	#RUN cd /space/git/work
+	#RUN git pull
 	LOGOUT imiell
 	RUN cat /space/git/work/bin/crontab_imiell > /tmp/imiellcron
 	RUN (cat /space/git/work/bin/crontab_$(hostname)_imiell 2>/tmp/imiellcronerr || true) >> /tmp/imiellcron
@@ -409,12 +409,6 @@ ENDIF
 IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
 	RUN cd /space/jenkins_cache
 	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
-	RUN cd -
-ENDIF
-# Belt and braces - ensure it's up to date.
-IF FILE_EXISTS /space/git/shutit-home-server
-	RUN cd /space/git/shutit-home-server
-	RUN git pull
 	RUN cd -
 ENDIF
 IF_NOT FILE_EXISTS /home/imiell/.aws
