@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+  - name: ensure nginx is installed
+    action: apt pkg=nginx state=present
+
+# put this in root and run ansible-playbook *yml
