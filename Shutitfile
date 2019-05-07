@@ -391,14 +391,6 @@ IF_NOT RUN grep -- '-a exit,always -F arch=b32 -S execve' /etc/audit/audit.rules
 	RUN echo '-a exit,always -F arch=b32 -S execve' >> /etc/audit/audit.rules
 ENDIF
 
-# Photon - site exploiter
-IF_NOT FILE_EXISTS /space/git/Photon
-	RUN cd /space/git
-	RUN git clone https://github.com/s0md3v/Photon
-	RUN cd Photon
-	RUN pip install .
-ENDIF
-
 IF_NOT FILE_EXISTS /space/git/Quark
 	RUN cd /space/git
 	RUN git clone https://github.com/s0md3v/Quark
@@ -425,11 +417,12 @@ IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
 	EXPECT_MULTI ['file in which=','empty for no passphrase=','Enter same passphrase again=','already exists=n']
 ENDIF
 # Log imiell out
-IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
-	RUN cd /space/jenkins_cache
-	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
-	RUN cd -
-ENDIF
+# Not sure we need this anymore
+#IF_NOT FILE_EXISTS /space/jenkins_cache/shutit-openshift-cluster
+#	RUN cd /space/jenkins_cache
+#	RUN git clone --depth=1 https://github.com/ianmiell/shutit-openshift-cluster
+#	RUN cd -
+#ENDIF
 IF_NOT FILE_EXISTS /home/imiell/.aws
 	RUN mkdir -p /home/imiell/.aws
 	RUN chmode 0600 /home/imiell/.aws

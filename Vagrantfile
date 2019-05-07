@@ -19,6 +19,6 @@ Vagrant.configure("2") do |config|
     pip install shutit
     git clone https://github.com/ianmiell/shutit-home-server
     cd shutit-home-server
-    shutit run
+    shutit run -l DEBUG
   SHELL
 end
