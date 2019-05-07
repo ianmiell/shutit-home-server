@@ -61,7 +61,7 @@ INSTALL meld
 INSTALL tmux
 INSTALL openjdk-8-jre
 INSTALL alien
-INSTALL brasero
+#INSTALL brasero - breaks?
 INSTALL moreutils
 INSTALL git
 INSTALL git-extras
