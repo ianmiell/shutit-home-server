@@ -402,13 +402,14 @@ ENDIF
 # Log me in as imiell
 USER imiell
 # If it's not been done before, check out my dotfiles and set it up
-IF_NOT FILE_EXISTS /home/imiell/.dotfiles
-	RUN cd /home/imiell
-	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
-	RUN cd .dotfiles
-	RUN ./script/bootstrap
-	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite all=O']
-ENDIF
+#IF_NOT FILE_EXISTS /home/imiell/.dotfiles
+#	RUN cd /home/imiell
+# !!!NEEDS LOGIN!!!
+#	RUN git clone --depth=1 https://github.com/ianmiell/dotfiles ~imiell/.dotfiles
+#	RUN cd .dotfiles
+#	RUN ./script/bootstrap
+#	EXPECT_MULTI ['What is your github author name=Ian Miell','What is your github author email=ian.miell@gmail.com','verwrite all=O']
+#ENDIF
 
 # Generate an ssh key
 IF_NOT FILE_EXISTS /home/imiell/.ssh/id_rsa.pub
