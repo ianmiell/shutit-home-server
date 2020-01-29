@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   def provisioned?(vm_name='default', provider='virtualbox')
     File.exist?(".vagrant/machines/#{vm_name}/#{provider}/action_provision")
   end
-  config.vm.synced_folder "/space", "/space", owner: "imiell", group: "imiell" if provisioned?
+  config.vm.synced_folder "/Users/imiell/git/shutit-home-server", "/space", owner: "imiell", group: "imiell" if provisioned?
   config.vm.provision "shell", inline: <<-SHELL
     adduser --disabled-password --gecos "" imiell
     apt-get -y update
@@ -19,6 +19,6 @@ Vagrant.configure("2") do |config|
     pip install shutit
     git clone https://github.com/ianmiell/shutit-home-server
     cd shutit-home-server
-    shutit run -l DEBUG
+    shutit run
   SHELL
 end
