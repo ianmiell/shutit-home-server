@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   def provisioned?(vm_name='default', provider='virtualbox')
     File.exist?(".vagrant/machines/#{vm_name}/#{provider}/action_provision")
   end
-  config.vm.synced_folder "/Users/imiell/git/shutit-home-server", "/space", owner: "imiell", group: "imiell" if provisioned?
+  config.vm.synced_folder "/Users/imiell/git", "/home/imiell/git", owner: "imiell", group: "imiell" if provisioned?
   config.vm.provision "shell", inline: <<-SHELL
     adduser --disabled-password --gecos "" imiell
     apt-get -y update
