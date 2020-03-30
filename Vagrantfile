@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
-    vb.memory = "4096"
+    vb.memory = "2048"
     vb.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
   end
   # Function to check whether VM was already provisioned
